@@ -7,6 +7,8 @@ var indexRouter = require("./routes/index");
 
 var app = express();
 
+app.use(require("cors")());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -29,4 +31,18 @@ app.use(function (err, req, res, next) {
   res.sendStatus(err.status || 500);
 });
 
-app.listen(PORT);
+const httpServer = app.listen(PORT, () => {
+  console.log(`LISTENING ON ${PORT}`);
+});
+
+process.on("exit", () => {
+  httpServer.close();
+});
+
+process.on("uncaughtException", () => {
+  httpServer.close();
+});
+
+process.on("SIGTERM", () => {
+  httpServer.close();
+});
