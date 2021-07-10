@@ -1,9 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const {
+  insertBet,
+  undoBet,
+  deleteGame,
+} = require("../services/shortGameManager");
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.sendStatus(200);
+router.post("/short-game/type-1", (req, res) => {
+  insertBet(req, res);
 });
+
+router.delete("/undo/short-game/type-1", (req, res) => {
+  undoBet(req, res);
+});
+
+router.delete("/short-game/type-1/reset", (req, res) => {
+  deleteAll;
+});
+
+router.delete("/short-game/type-1/remove", (req, res) => {});
 
 module.exports = router;
