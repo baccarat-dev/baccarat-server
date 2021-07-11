@@ -1,22 +1,22 @@
 const ShortGame = require("../models/ShortGame");
 
-const insertBet = async (bet, res) => {
+async function insertBet(bet, res) {
   let doc = new ShortGame({
     bet,
   });
   doc = await doc.save();
   console.log(doc);
   res.json({ status: 200 });
-};
+}
 
-const undoBet = async (req, res) => {};
+async function undoBet(req, res) {}
 
-const getAllBets = async (res) => {
+async function getAllBets(res) {
   const docs = await ShortGame.find({});
   res.json({ status: 200, data: docs.map((x) => x.bet) });
-};
+}
 
-const resetGame = async (res) => {
+async function resetGame(res) {
   const q = await ShortGame.deleteMany({});
   console.log(q);
   if (q.ok) {
@@ -25,8 +25,28 @@ const resetGame = async (res) => {
     res.json({ status: 500 });
   }
   console.log("done");
+}
+
+async function deleteGame(req, res) {}
+
+async function test() {
+  let secs = 0;
+  for (let i = 0; i < 1000; i++) {
+    let t0 = Date.now();
+    const docs = new Array(1000);
+    docs.fill({ bet: "P" });
+    await ShortGame.insertMany(docs);
+    let t1 = Date.now();
+    secs += t1 - t0;
+    console.log("done " + i + " in " + secs + " ms");
+  }
+}
+
+module.exports = {
+  insertBet,
+  undoBet,
+  resetGame,
+  deleteGame,
+  getAllBets,
+  test,
 };
-
-const deleteGame = async (req, res) => {};
-
-module.exports = { insertBet, undoBet, resetGame, deleteGame, getAllBets };

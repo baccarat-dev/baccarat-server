@@ -6,6 +6,7 @@ const {
   resetGame,
   getAllBets,
   deleteGame,
+  test,
 } = require("../services/shortGameManager");
 
 router.get("/short-game/type-1/allrecords", (req, res) => {
@@ -30,3 +31,4 @@ router.get("/", (req, res) => {
   res.sendStatus(200);
 });
 module.exports = router;
+3000;
