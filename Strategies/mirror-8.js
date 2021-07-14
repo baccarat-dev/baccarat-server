@@ -36,8 +36,4 @@ module.exports = function (S, round, bet, betsList) {
     // reached the final round in a column, there is no expected next move
     S.nextMove = "-";
   }
-
-  console.log(`round: ${round}, bet: ${bet}, betTo: ${betToCompare}`);
-
-  //console.log("Line 42:", S);
 };

@@ -1,27 +1,33 @@
 const ShortGame = require("../models/ShortGameTypeI");
+const StrategyTypeI = require("../models/StrategyTypeI");
+const { calcPercent } = require("../Strategies/common");
 
-//  new ShortGame().save();  // !!! DELETE LATER !!!
+async function getAllBets(_id, res) {
+  const data = await ShortGame.findById(_id).populate("strategies");
+  res.contentType("application/json");
+  res.send(JSON.stringify({ status: 200, data }, null, 4));
+}
 
 async function insertBet(body, res) {
-  console.log("started");
   ShortGame.findById(body._id)
+    .populate("strategies")
     .exec()
-    .then(async (doc) => {
-      doc.bets = [...doc.bets, body.bet];
-      require("../Strategies/mirror-8")(
-        doc.strategies["test"],
-        doc.round,
-        body.bet,
-        doc.bets
-      );
-      console.log("line 18:", doc.strategies["test"]);
-      doc.round++;
-      doc = await doc.save();
-      if (doc) {
+    .then(async (GAME) => {
+      const S_id = GAME.strategies.find((s) => s.code === "test")._id;
+      const S = await StrategyTypeI.findById(S_id);
+      console.log(S);
+      console.log("\n-----------\n");
+      GAME.bets = [...GAME.bets, body.bet];
+      require("../Strategies/mirror-8")(S, GAME.round, body.bet, GAME.bets);
+      GAME.round++;
+      await S.save();
+      GAME = await GAME.save();
+      if (GAME) {
         res.json({ status: 200 });
       } else {
         res.json({ status: 500 });
       }
+      console.log(S);
     })
     .catch((err) => {
       console.log(err);
@@ -29,31 +35,22 @@ async function insertBet(body, res) {
     });
 }
 
-insertBet(
-  { bet: "P", _id: "60ef2a69c6b49b20e1d87c7a" },
-  {
-    json: (res) => {
-      console.log(res);
-    },
-  }
-);
-
 async function undoBet(req, res) {}
 
-async function getAllBets(res) {
-  const docs = await ShortGame.find({});
-  res.json({ status: 200, data: docs.map((x) => x.bet) });
-}
-
-async function resetGame(res) {
-  const q = await ShortGame.deleteMany({});
-  console.log(q);
-  if (q.ok) {
-    res.json({ status: 200 });
-  } else {
-    res.json({ status: 500 });
-  }
-  console.log("done");
+async function resetGame(_id, res) {
+  const game = await ShortGame.findById(_id);
+  game.round = 1;
+  game.bets = [];
+  game.strategies.forEach(async (_id) => {
+    let S = await StrategyTypeI.findById(_id);
+    S.lvl = 1;
+    S.hasWonInCol = false;
+    S.nextMove = "-";
+    calcPercent(S);
+    await S.save();
+  });
+  await game.save();
+  res.json({ status: 200 });
 }
 
 //resetGame();
@@ -69,9 +66,7 @@ async function test() {
     await ShortGame.insertMany(docs);
     let t1 = Date.now();
     secs += t1 - t0;
-    console.log("done " + (i + 1) + " in " + secs + " ms");
   }
-  console.log("finished");
 }
 
 module.exports = {

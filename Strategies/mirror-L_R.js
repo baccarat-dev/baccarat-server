@@ -10,7 +10,6 @@ let currentLevel = 1,
 export function run(bet, betsList) {
   const round = betsList.length;
   const mod5 = round % 5;
-  console.log(mod5);
   if (round < 16) {
     return;
   }

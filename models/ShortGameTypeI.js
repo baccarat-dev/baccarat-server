@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+var ObjectId = require("mongodb").ObjectID;
 
 const schema = new Schema(
   {
@@ -11,20 +12,7 @@ const schema = new Schema(
     isTrashed: { type: Boolean, default: false },
     lastUpdated: { type: Date, default: Date.now() },
     threshold: { type: Number, default: 3 },
-    strategies: {
-      type: Object,
-      default: {
-        test: {
-          code: "Str",
-          name: "str",
-          lvl: 1,
-          maxLvl: 10,
-          percent: 10,
-          nextMove: "-",
-          hasWonInCol: false,
-        },
-      },
-    },
+    strategies: [{ type: ObjectId, ref: "strategies_type_I" }],
   },
   { collection: "short_games_type_I" }
 );

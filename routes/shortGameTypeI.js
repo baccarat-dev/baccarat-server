@@ -9,8 +9,8 @@ const {
   test,
 } = require("../services/shortGameTypeIManager");
 
-router.get("/allrecords", (req, res) => {
-  getAllBets(res);
+router.get("/allrecords/:_id", (req, res) => {
+  getAllBets(req.params._id, res);
 });
 
 router.post("/", (req, res) => {
@@ -21,8 +21,8 @@ router.delete("/undo", (req, res) => {
   undoBet(req, res);
 });
 
-router.delete("/reset", (req, res) => {
-  resetGame(res);
+router.delete("/reset/:_id", (req, res) => {
+  resetGame(req.params._id, res);
 });
 
 router.delete("/remove", (req, res) => {});
