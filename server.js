@@ -33,15 +33,3 @@ app.use(function (err, req, res, next) {
 const httpServer = app.listen(PORT, () => {
   console.log(`LISTENING ON ${PORT}`);
 });
-
-process.on("exit", () => {
-  httpServer.close();
-});
-
-process.on("uncaughtException", () => {
-  httpServer.close();
-});
-
-process.on("SIGTERM", () => {
-  httpServer.close();
-});

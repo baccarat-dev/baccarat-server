@@ -13,7 +13,7 @@ async function insertBet(body, res) {
     .populate("strategies")
     .exec()
     .then(async (GAME) => {
-      const S_id = GAME.strategies.find((s) => s.code === "test")._id;
+      const S_id = GAME.strategies.find((s) => s.code === "mirror-8")._id;
       const S = await StrategyTypeI.findById(S_id);
       console.log(S);
       console.log("\n-----------\n");
