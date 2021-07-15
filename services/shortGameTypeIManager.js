@@ -14,10 +14,8 @@ async function insertBet(body, res) {
     .exec()
     .then(async (GAME) => {
       GAME.bets.push(body.bet);
-      console.log("round = " + GAME.round);
 
       const promisesQueue = [];
-
       GAME.strategies.forEach((S_id) => {
         const promise = new Promise(async (resolve, reject) => {
           const S = await StrategyTypeIGameData.findById(S_id);
@@ -29,7 +27,8 @@ async function insertBet(body, res) {
         });
         promisesQueue.push(promise);
       });
-      await Promise.all(promisesQueue); // this waits for all strategies to finish
+      // this holds execution until all strategies finish
+      await Promise.all(promisesQueue);
       GAME.round++;
       await GAME.save();
       res.json({ status: 200 });
@@ -57,8 +56,6 @@ async function resetGame(_id, res) {
   await game.save();
   res.json({ status: 200 });
 }
-
-//resetGame();
 
 async function deleteGame(req, res) {}
 
