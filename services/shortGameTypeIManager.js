@@ -50,7 +50,7 @@ async function resetGame(_id, res) {
     S.lvl = 1;
     S.hasWonInCol = false;
     S.nextMove = "-";
-    calcPercent(S);
+    S.percent = 0;
     await S.save();
   });
   await game.save();
@@ -58,18 +58,6 @@ async function resetGame(_id, res) {
 }
 
 async function deleteGame(req, res) {}
-
-async function test() {
-  let secs = 0;
-  for (let i = 0; i < 10; i++) {
-    let t0 = Date.now();
-    const docs = new Array(1000);
-    docs.fill({ bet: "P" });
-    await ShortGame.insertMany(docs);
-    let t1 = Date.now();
-    secs += t1 - t0;
-  }
-}
 
 module.exports = {
   insertBet,
