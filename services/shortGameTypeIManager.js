@@ -65,5 +65,4 @@ module.exports = {
   resetGame,
   deleteGame,
   getAllBets,
-  test,
 };
