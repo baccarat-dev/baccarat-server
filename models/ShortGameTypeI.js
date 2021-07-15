@@ -12,7 +12,7 @@ const schema = new Schema(
     isTrashed: { type: Boolean, default: false },
     lastUpdated: { type: Date, default: Date.now() },
     threshold: { type: Number, default: 3 },
-    strategies: [{ type: ObjectId, ref: "strategies_type_I" }],
+    strategies: [{ type: ObjectId, ref: "strategies_type_I_game_data" }],
   },
   { collection: "short_games_type_I" }
 );

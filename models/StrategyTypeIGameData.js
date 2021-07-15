@@ -12,8 +12,12 @@ const schema = new Schema(
     percent: Number,
     nextMove: { type: String, default: "-" },
     hasWonInCol: { type: Boolean, default: false },
+    reverse: { type: Boolean, default: false },
   },
-  { collection: "strategies_type_I" }
+  { collection: "strategies_type_I_game_data" }
 );
 
-module.exports = StrategyTypeI = mongoose.model("strategies_type_I", schema);
+module.exports = StrategyTypeIGameData = mongoose.model(
+  "strategies_type_I_game_data",
+  schema
+);

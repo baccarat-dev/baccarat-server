@@ -1,5 +1,5 @@
 const ShortGame = require("../models/ShortGameTypeI");
-const StrategyTypeI = require("../models/StrategyTypeI");
+const StrategyTypeIGameData = require("../models/StrategyTypeIGameData");
 const { calcPercent } = require("../Strategies/common");
 
 async function getAllBets(_id, res) {
@@ -13,21 +13,26 @@ async function insertBet(body, res) {
     .populate("strategies")
     .exec()
     .then(async (GAME) => {
-      const S_id = GAME.strategies.find((s) => s.code === "mirror-8")._id;
-      const S = await StrategyTypeI.findById(S_id);
-      console.log(S);
-      console.log("\n-----------\n");
-      GAME.bets = [...GAME.bets, body.bet];
-      require("../Strategies/mirror-8")(S, GAME.round, body.bet, GAME.bets);
+      GAME.bets.push(body.bet);
+      console.log("round = " + GAME.round);
+
+      const promisesQueue = [];
+
+      GAME.strategies.forEach((S_id) => {
+        const promise = new Promise(async (resolve, reject) => {
+          const S = await StrategyTypeIGameData.findById(S_id);
+          const runStrategy = require("../Strategies/" + S.code);
+          runStrategy(S, GAME.round, body.bet, GAME.bets);
+          await S.save();
+          console.log("finished: " + S.name);
+          resolve();
+        });
+        promisesQueue.push(promise);
+      });
+      await Promise.all(promisesQueue); // this waits for all strategies to finish
       GAME.round++;
-      await S.save();
-      GAME = await GAME.save();
-      if (GAME) {
-        res.json({ status: 200 });
-      } else {
-        res.json({ status: 500 });
-      }
-      console.log(S);
+      await GAME.save();
+      res.json({ status: 200 });
     })
     .catch((err) => {
       console.log(err);
@@ -42,7 +47,7 @@ async function resetGame(_id, res) {
   game.round = 1;
   game.bets = [];
   game.strategies.forEach(async (_id) => {
-    let S = await StrategyTypeI.findById(_id);
+    let S = await StrategyTypeIGameData.findById(_id);
     S.lvl = 1;
     S.hasWonInCol = false;
     S.nextMove = "-";
