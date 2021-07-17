@@ -17,8 +17,10 @@ router.post("/", (req, res) => {
   insertBet(req.body, res);
 });
 
-router.delete("/undo", (req, res) => {
-  undoBet(req, res);
+router.delete("/undo/:_id", (req, res) => {
+  undoBet(req.params._id, res).catch(() => {
+    res.json({ status: 500 });
+  });
 });
 
 router.delete("/reset/:_id", (req, res) => {

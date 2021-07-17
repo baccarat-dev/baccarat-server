@@ -13,6 +13,8 @@ const schema = new Schema(
     nextMove: { type: String, default: "-" },
     hasWonInCol: { type: Boolean, default: false },
     reverse: { type: Boolean, default: false },
+    cornerCellIdx: String,
+    prevState: Object,
   },
   { collection: "strategies_type_I_game_data" }
 );
