@@ -1,12 +1,12 @@
 const { roundXToNthDecimal } = require("../helper");
 
-module.exports.calcPercent = function (S) {
+const calcPercent = function (S) {
   S.maxLvl = S.maxLvl < S.lvl ? S.lvl : S.maxLvl;
   const percent = (S.lvl * 100) / S.maxLvl;
   S.percent = roundXToNthDecimal(percent, 1);
 };
 
-module.exports.reset = (S) => {
+const reset = (S) => {
   S.lvl = 1;
   S.nextMove = "-";
   S.hasWonInCol = true;
@@ -14,7 +14,7 @@ module.exports.reset = (S) => {
   S.percent = roundXToNthDecimal(percent, 1);
 };
 
-module.exports.runStrategies = async function (GAME, bet) {
+const runStrategies = async function (GAME, bet) {
   const promisesQueue = [];
 
   GAME.strategies.forEach((S_id) => {
@@ -31,3 +31,9 @@ module.exports.runStrategies = async function (GAME, bet) {
   // this holds execution until all strategies finish
   return await Promise.all(promisesQueue);
 };
+
+const okurrs = function (val, arr) {
+  return arr.reduce((cum, x) => (x === val ? cum + 1 : cum), 0);
+};
+
+module.exports = { runStrategies, reset, calcPercent, okurrs };

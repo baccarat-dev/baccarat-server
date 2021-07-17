@@ -23,12 +23,8 @@ async function getAllBets(_id, res) {
   const pct_avg_B = pct_count_B
     ? roundXToNthDecimal(pct_sum_B / pct_count_B, 1)
     : 0;
-  console.log(pct_count_P, pct_count_B);
-  console.log(pct_sum_P, pct_sum_B);
-  console.log(pct_avg_P, pct_avg_B);
   data.pct_avg_P = pct_avg_P;
   data.pct_avg_B = pct_avg_B;
-  console.log(data);
   res.contentType("application/json");
   res.send(JSON.stringify({ status: 200, data }, null, 4));
 }
