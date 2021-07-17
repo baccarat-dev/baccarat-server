@@ -9,6 +9,7 @@ module.exports = function (S, round, bet, betsList) {
 
   if (round % NB_ROWS === 1) {
     // Entirely skip the first row. No % calc and No nextMove
+    S.nextMove = "-";
     return;
   }
 
