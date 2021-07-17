@@ -49,11 +49,11 @@ router.get("/setmaxlvl/:N", (req, res) => {
         });
         await Promise.all(promisesQueue); // this holds execution until all strategies finish
 
-        res.json({ status: 200 });
+        res.json({ status: 200, msg: "MaxLvl set to " + N });
       })
       .catch((err) => {
         console.log(err);
-        res.json({ status: 500 });
+        res.json({ status: 500, msg: "error" });
       });
   }
 });

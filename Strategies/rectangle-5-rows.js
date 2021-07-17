@@ -5,19 +5,31 @@ module.exports = function (S, round, bet, betsList) {
   if (round < 6) {
     return;
   }
-
   const NB_ROWS = 5;
 
-  // -------- Store the values of 3 corners of the square in an array
+  if (round % NB_ROWS === 1) {
+    // Entirely skip the first row. No % calc and No nextMove
+    return;
+  }
+
+  // -------- Store the values of 5 target elements of the rectangle in an array
   const targetBetArr = [],
     nextBetArr = [];
   const idx = round - 1;
   targetBetArr.push(
+    betsList[idx - 2],
     betsList[idx - 1],
-    betsList[idx - 5],
-    betsList[idx - 1 - 5]
+    betsList[idx - 5 - 2],
+    betsList[idx - 5 - 1],
+    betsList[idx - 5]
   );
-  nextBetArr.push(betsList[idx], betsList[idx - 5], betsList[idx + 1 - 5]);
+  nextBetArr.push(
+    betsList[idx - 1],
+    betsList[idx],
+    betsList[idx - 5 - 1],
+    betsList[idx - 5],
+    betsList[idx - 5 + 1]
+  );
   // ------------------------
 
   // -------- Set the nextMove. When all values the same set to "-"
@@ -34,8 +46,8 @@ module.exports = function (S, round, bet, betsList) {
   console.log(targetBetArr);
   // ----------------------
 
-  if (round % NB_ROWS === 1) {
-    // 1st row. nextMove already set above so just skip
+  if (round % NB_ROWS === 2) {
+    // 2st row. No % calc and nextMove already set above so just skip
     return;
   } else if (round % NB_ROWS === 0) {
     // end row. % is calculated but no next move
