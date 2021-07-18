@@ -14,8 +14,8 @@ const schema = new Schema(
     hasWonInCol: Boolean,
     reverse: Boolean,
     cornerCellIdx: String,
-    prevState: Object,
     rectangle: Boolean,
+    history: [Object],
   },
   { collection: "strategies_type_I_game_data" }
 );

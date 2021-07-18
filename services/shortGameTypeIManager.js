@@ -50,16 +50,26 @@ async function resetGame(_id, res) {
   const game = await ShortGame.findById(_id);
   game.round = 1;
   game.bets = [];
-  game.strategies.forEach(async (_id) => {
-    let S = await StrategyTypeIGameData.findById(_id);
-    S.lvl = 1;
-    S.hasWonInCol = false;
-    S.nextMove = "-";
-    S.percent = 0;
-    S.cornerCellIdx = undefined;
-    await S.save();
+  game.strategies.forEach(async (_id) => {});
+
+  const promisesQueue = [];
+  game.strategies.forEach((S_id) => {
+    const promise = new Promise(async (resolve) => {
+      const S = await StrategyTypeIGameData.findById(S_id);
+      S.lvl = 1;
+      S.hasWonInCol = false;
+      S.nextMove = "-";
+      S.percent = 0;
+      S.cornerCellIdx = undefined;
+      S.history = [];
+      await S.save();
+      resolve();
+    });
+    promisesQueue.push(promise);
   });
+  await Promise.all(promisesQueue); // this holds execution until all strategies finish
   await game.save();
+
   res.json({ status: 200 });
 }
 
@@ -69,6 +79,23 @@ async function undoBet(_id, res) {
   game.bets.pop();
   game.round--;
   const l2 = game.bets.length + game.round;
+
+  const promisesQueue = [];
+  game.strategies.forEach((S_id) => {
+    const promise = new Promise(async (resolve) => {
+      const S = await StrategyTypeIGameData.findById(S_id);
+      const history = S.history;
+      S.overwrite({ ...history[history.length - 1] });
+      history.pop();
+      S.history = history;
+      await S.save();
+      resolve();
+    });
+    promisesQueue.push(promise);
+  });
+  await Promise.all(promisesQueue); // this holds execution until all strategies finish
+  await game.save();
+
   await game.save();
   if (l2 === l1 - 2) {
     res.json({ status: 200 });

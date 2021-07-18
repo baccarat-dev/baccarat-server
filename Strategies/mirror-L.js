@@ -54,6 +54,7 @@ module.exports = function (S, round, bet, betsList) {
 
   if (targetBet === bet) {
     // strategy won, we reset
+    S.hasWonInCol = true;
     reset(S);
     return;
   } else {
