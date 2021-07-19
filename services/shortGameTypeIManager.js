@@ -3,6 +3,8 @@ const ShortGame = require("../models/ShortGameTypeI");
 const StrategyTypeIGameData = require("../models/StrategyTypeIGameData");
 const { runStrategies } = require("../Strategies/common");
 
+//StrategyTypeIGameData.insertMany([{}, {}, {}, {}, {}, {}, {}, {}]);
+
 async function getAllBets(_id, res) {
   const data = (
     await ShortGame.findById(_id).populate("strategies")

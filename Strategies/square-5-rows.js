@@ -30,8 +30,6 @@ module.exports = function (S, round, bet, betsList) {
     S.nextMove = okurrs("P", nextBetArr) > okurrs("B", nextBetArr) ? "P" : "B";
     S.nextMove = S.reverse ? (S.nextMove === "P" ? "B" : "P") : S.nextMove;
   }
-  console.log(nextBetArr);
-  console.log(targetBetArr);
   // ----------------------
 
   if (round % NB_ROWS === 1) {

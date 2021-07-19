@@ -16,6 +16,7 @@ const schema = new Schema(
     cornerCellIdx: String,
     rectangle: Boolean,
     history: [Object],
+    row: Number,
   },
   { collection: "strategies_type_I_game_data" }
 );

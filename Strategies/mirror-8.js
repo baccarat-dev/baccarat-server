@@ -28,6 +28,8 @@ module.exports = function (S, round, bet, betsList) {
 
   if (STRATEGY_WON) {
     // strategy won, so we reset the strategy details
+    S.hasWonInCol = true;
+    S.nextMove = "-";
     reset(S);
   } else {
     // strategy lost, we calc %, go up a lvl and update maxLvl if exceeded

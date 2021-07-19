@@ -8,7 +8,6 @@ const calcPercent = function (S) {
 
 const reset = (S) => {
   S.lvl = 1;
-  S.nextMove = "-";
   const percent = (S.lvl * 100) / S.maxLvl;
   S.percent = roundXToNthDecimal(percent, 1);
 };
