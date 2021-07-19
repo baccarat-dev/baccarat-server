@@ -28,7 +28,7 @@ module.exports = function (S, round, bet, betsList) {
 
   const STRATEGY_WON = bet === targetBet;
 
-  if (MOD6 > 0 && MOD6 <= S.row) {
+  if (MOD6 > S.row - 3 && MOD6 <= S.row) {
     if (STRATEGY_WON) {
       // strategy won, so we reset the strategy details
       S.hasWonInCol = true;
