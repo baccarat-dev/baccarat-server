@@ -17,6 +17,7 @@ const schema = new Schema(
     rectangle: Boolean,
     history: [Object],
     row: Number,
+    target: String,
   },
   { collection: "strategies_type_I_game_data" }
 );
