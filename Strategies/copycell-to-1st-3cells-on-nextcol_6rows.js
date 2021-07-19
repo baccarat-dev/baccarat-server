@@ -19,16 +19,8 @@ module.exports = function (S, round, bet, betsList) {
       : "P"
     : betsList[idx];
 
-  S.nextMove = MOD6 < S.row ? targetBet : "-";
-
-  if (S.hasWonInCol) {
-    S.nextMove = "-";
-    return;
-  }
-
   const STRATEGY_WON = bet === targetBet;
-
-  if (MOD6 > S.row - 3 && MOD6 <= S.row) {
+  if (!S.hasWonInCol || (MOD6 > S.row - 3 && MOD6 <= S.row)) {
     if (STRATEGY_WON) {
       // strategy won, so we reset the strategy details
       S.hasWonInCol = true;
@@ -39,5 +31,7 @@ module.exports = function (S, round, bet, betsList) {
       S.lvl++;
       calcPercent(S);
     }
+  } else {
+    S.nextMove = "-";
   }
 };
