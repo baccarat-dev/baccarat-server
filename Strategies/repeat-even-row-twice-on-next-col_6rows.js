@@ -6,13 +6,7 @@ module.exports = function (S, round, bet, betsList) {
     return;
   }
   const MOD6 = (round - 1) % 6;
-  if (MOD6 === 5) {
-    S.target = S.nextMove = S.reverse
-      ? betsList[round - 5] === "P"
-        ? "B"
-        : "P"
-      : betsList[round - 5];
-  }
+  if (MOD6 === 5) setTarget(S, round, betsList);
   if (round === 6) {
     return;
   }
@@ -38,12 +32,13 @@ module.exports = function (S, round, bet, betsList) {
     calcPercent(S);
   }
 
-  if (MOD6 % 2 === 1) {
-    S.target = S.nextMove = S.reverse
-      ? betsList[round - 5] === "P"
-        ? "B"
-        : "P"
-      : betsList[round - 5];
-    console.log("just set the target to ", S.target);
-  }
+  if (MOD6 % 2 === 1) setTarget(S, round, betsList);
 };
+
+function setTarget(S, round, betsList) {
+  S.target = S.nextMove = S.reverse
+    ? betsList[round - 5] === "P"
+      ? "B"
+      : "P"
+    : betsList[round - 5];
+}

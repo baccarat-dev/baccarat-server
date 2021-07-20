@@ -34,7 +34,7 @@ module.exports = function (S, round, bet, betsList) {
   }
 
   // sets the next move just before starting the 1st cell
-  if (S.row - 3 === round % 6) {
+  if (round > 5 && S.row - 3 === round % 6) {
     S.nextMove = S.target;
   }
 };
