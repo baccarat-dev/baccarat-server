@@ -7,8 +7,12 @@ var indexRouter = require("./routes/index");
 
 var app = express();
 
+console.log();
+
 app.use(require("cors")()); // cors
-//app.use(require("morgan")("tiny")); // morgan logger
+if (process.argv[2] == "LOG") {
+  app.use(require("morgan")("tiny")); // morgan logger
+}
 app.use(express.json()); // json parser
 
 require("./db/connect");
@@ -30,6 +34,6 @@ app.use(function (err, req, res, next) {
   res.sendStatus(err.status || 500);
 });
 
-const httpServer = app.listen(PORT, () => {
+const httpServer = app.listen(PORT || 4545, () => {
   console.log(`LISTENING ON ${PORT}`);
 });
