@@ -10,11 +10,6 @@ module.exports = function (S, round, bet, betsList) {
     S.hasWonInCol = false;
   }
 
-  if (MOD6 === S.row - 1) {
-    S.target = betsList[round - 1];
-    S.target = S.reverse ? (S.target === "P" ? "B" : "P") : S.target;
-  }
-
   const STRATEGY_WON = bet === S.target;
   if (ACTIVE && !S.hasWonInCol && MOD6 >= S.row - 3 && MOD6 < S.row) {
     if (STRATEGY_WON) {
@@ -32,6 +27,13 @@ module.exports = function (S, round, bet, betsList) {
     S.nextMove = "-";
   }
 
+  // sets the next target and changes the nextmove to "-" when reaching the target row
+  if (MOD6 === S.row - 1) {
+    S.target = betsList[round - 1];
+    S.nextMove = "-";
+  }
+
+  // sets the next move just before starting the 1st cell
   if (S.row - 3 === round % 6) {
     S.nextMove = S.target;
   }
