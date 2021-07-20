@@ -8,7 +8,7 @@ var indexRouter = require("./routes/index");
 var app = express();
 
 app.use(require("cors")()); // cors
-app.use(require("morgan")("tiny")); // morgan logger
+//app.use(require("morgan")("tiny")); // morgan logger
 app.use(express.json()); // json parser
 
 require("./db/connect");
