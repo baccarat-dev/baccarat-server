@@ -1,6 +1,6 @@
 
-FROM_URL="mongodb+srv://superadmin:Uk0lMX1PWWsMwtx1@baccarat-app.yeclo.mongodb.net/main?authSource=admin&replicaSet=atlas-8x592k-shard-0&readPreference=primary&ssl=true"
-TO_URL="mongodb://127.0.0.1:27017/main"
+TO_URL="mongodb+srv://superadmin:Uk0lMX1PWWsMwtx1@baccarat-app.yeclo.mongodb.net/main?authSource=admin&replicaSet=atlas-8x592k-shard-0&readPreference=primary&ssl=true"
+FROM_URL="mongodb://127.0.0.1:27017/main"
 FROM_DB="main.*"
 TO_DB="main.*"
 

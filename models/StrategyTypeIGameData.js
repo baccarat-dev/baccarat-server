@@ -18,6 +18,8 @@ const schema = new Schema(
     history: [Object],
     row: Number,
     target: String,
+    enabled: Boolean,
+    activated: Boolean,
   },
   { collection: "strategies_type_I_game_data" }
 );

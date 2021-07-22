@@ -10,9 +10,6 @@ async function getAllBets(_id, res) {
     await ShortGame.findById(_id).populate("strategies")
   ).toObject();
 
-  console.log(data.strategies);
-  console.log(data.strategies.length);
-
   data.strategies = data.strategies.filter((S) => S.enabled);
 
   let pct_sum_P = (pct_sum_B = pct_count_P = pct_count_B = 0);
