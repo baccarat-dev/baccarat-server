@@ -10,7 +10,10 @@ const {
 } = require("../services/shortGameTypeIManager");
 
 router.get("/allrecords/:_id", (req, res) => {
-  getAllBets(req.params._id, res);
+  getAllBets(req.params._id, res).catch((err) => {
+    console.log(err);
+    res.json({ status: 500 });
+  });
 });
 
 router.post("/", (req, res) => {
@@ -18,7 +21,8 @@ router.post("/", (req, res) => {
 });
 
 router.delete("/undo/:_id", (req, res) => {
-  undoBet(req.params._id, res).catch(() => {
+  undoBet(req.params._id, res).catch((err) => {
+    console.log(err);
     res.json({ status: 500 });
   });
 });

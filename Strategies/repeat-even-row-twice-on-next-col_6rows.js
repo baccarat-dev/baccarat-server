@@ -16,7 +16,6 @@ module.exports = function (S, round, bet, betsList) {
   }
 
   if (S.hasWonInCol) {
-    console.log("returned with ", S.nextMove);
     return;
   }
 

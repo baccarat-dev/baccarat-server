@@ -9,6 +9,12 @@ async function getAllBets(_id, res) {
   const data = (
     await ShortGame.findById(_id).populate("strategies")
   ).toObject();
+
+  console.log(data.strategies);
+  console.log(data.strategies.length);
+
+  data.strategies = data.strategies.filter((S) => S.enabled);
+
   let pct_sum_P = (pct_sum_B = pct_count_P = pct_count_B = 0);
   data.strategies.forEach((S) => {
     if (S.nextMove === "P") {
@@ -52,7 +58,6 @@ async function resetGame(_id, res) {
   const game = await ShortGame.findById(_id);
   game.round = 1;
   game.bets = [];
-  game.strategies.forEach(async (_id) => {});
 
   const promisesQueue = [];
   game.strategies.forEach((S_id) => {
@@ -86,12 +91,16 @@ async function undoBet(_id, res) {
   game.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve) => {
       const S = await StrategyTypeIGameData.findById(S_id);
-      const history = S.history;
-      S.overwrite({ ...history[history.length - 1] });
-      history.pop();
-      S.history = history;
-      await S.save();
-      resolve();
+      if (S.enabled) {
+        const history = S.history;
+        S.overwrite({ ...history[history.length - 1] });
+        history.pop();
+        S.history = history;
+        await S.save();
+        resolve();
+      } else {
+        resolve();
+      }
     });
     promisesQueue.push(promise);
   });
