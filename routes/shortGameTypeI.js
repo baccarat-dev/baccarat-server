@@ -65,14 +65,12 @@ router.get("/setmaxlvl/:_id/:N", (req, res) => {
 router.get("/strategy/setmaxlvl/:_id/:N", (req, res) => {
   const N = req.params.N;
   const _id = req.params._id;
-  console.log("got here");
   if (isNaN(+N)) {
     res.json({ status: 500 });
   } else {
     StrategyTypeIGameData.findById(_id)
       .exec()
       .then(async (S) => {
-        console.log("got here");
         if (S) {
           S.maxLvl = +N;
           await S.save();
