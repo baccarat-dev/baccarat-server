@@ -12,24 +12,34 @@ async function getAllBets(_id, res) {
 
   data.strategies = data.strategies.filter((S) => S.enabled);
 
-  let pct_sum_P = (pct_sum_B = pct_count_P = pct_count_B = 0);
+  let pct_sum_P = (pct_sum_B = P_next_count = B_next_count = 0);
   data.strategies.forEach((S) => {
     if (S.nextMove === "P") {
       pct_sum_P += S.percent;
-      pct_count_P++;
+      P_next_count++;
     } else if (S.nextMove === "B") {
       pct_sum_B += S.percent;
-      pct_count_B++;
+      B_next_count++;
     }
   });
-  const pct_avg_P = pct_count_P
-    ? roundXToNthDecimal(pct_sum_P / pct_count_P, 1)
+  const pct_avg_P = P_next_count
+    ? roundXToNthDecimal(pct_sum_P / P_next_count, 1)
     : 0;
-  const pct_avg_B = pct_count_B
-    ? roundXToNthDecimal(pct_sum_B / pct_count_B, 1)
+  const pct_avg_B = B_next_count
+    ? roundXToNthDecimal(pct_sum_B / B_next_count, 1)
     : 0;
-  data.pct_avg_P = pct_avg_P;
-  data.pct_avg_B = pct_avg_B;
+  const P_next_pct =
+    Math.round((100 * P_next_count) / (P_next_count + B_next_count)) || 0;
+  const B_next_pct =
+    Math.round((100 * B_next_count) / (P_next_count + B_next_count)) || 0;
+  data.stats = {
+    pct_avg_P,
+    pct_avg_B,
+    P_next_count,
+    B_next_count,
+    P_next_pct,
+    B_next_pct,
+  };
   res.contentType("application/json");
   res.send(JSON.stringify({ status: 200, data }, null, 4));
 }
