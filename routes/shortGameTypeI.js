@@ -31,9 +31,9 @@ router.delete("/reset/:_id", (req, res) => {
   resetGame(req.params._id, res);
 });
 
-router.get("/setmaxlvl/:N", (req, res) => {
+router.get("/setmaxlvl/:_id/:N", (req, res) => {
   const N = req.params.N;
-  const _id = "60ef2a69c6b49b20e1d87c7a";
+  const _id = req.params._id;
   if (isNaN(+N)) {
     res.json({ status: 500 });
   } else {
@@ -53,13 +53,70 @@ router.get("/setmaxlvl/:N", (req, res) => {
         });
         await Promise.all(promisesQueue); // this holds execution until all strategies finish
 
-        res.json({ status: 200, msg: "MaxLvl set to " + N });
+        res.json({ status: 200, msg: "Max lvl set to " + N });
       })
       .catch((err) => {
         console.log(err);
         res.json({ status: 500, msg: "error" });
       });
   }
+});
+
+router.get("/strategy/setmaxlvl/:_id/:N", (req, res) => {
+  const N = req.params.N;
+  const _id = req.params._id;
+  console.log("got here");
+  if (isNaN(+N)) {
+    res.json({ status: 500 });
+  } else {
+    StrategyTypeIGameData.findById(_id)
+      .exec()
+      .then(async (S) => {
+        console.log("got here");
+        if (S) {
+          S.maxLvl = +N;
+          await S.save();
+          res.json({
+            status: 200,
+            msg: `Max lvl set to ${N} for '${S.name}' `,
+          });
+        } else {
+          res.json({ status: 404, msg: "Nonexistent Strategy ID" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ status: 500, msg: "Operation Failed" });
+      });
+  }
+});
+
+router.get("/strategy/:action/:_id", (req, res) => {
+  const action = req.params.action.toLowerCase();
+  if (!["enable", "disable"].includes(action)) {
+    res.status(200).json({ status: 204, msg: "invalid action" });
+    return;
+  }
+  const _id = req.params._id;
+
+  StrategyTypeIGameData.findById(_id)
+    .exec()
+    .then(async (S) => {
+      if (S) {
+        S.enabled = action === "enable" ? true : false;
+        await S.save();
+        res.json({
+          status: 200,
+          msg: `${action}d strategy '${S.name}' `,
+        });
+      } else {
+        res.json({ status: 404, msg: "Nonexistent Strategy" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({ status: 500, msg: "Operation Failed" });
+    });
 });
 
 router.delete("/remove", (req, res) => {});
