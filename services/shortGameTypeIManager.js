@@ -76,6 +76,8 @@ async function resetGame(_id, res) {
       S.percent = 0;
       S.cornerCellIdx = undefined;
       S.history = [];
+      S.activated = false;
+      S.count = 0;
       await S.save();
       resolve();
     });

@@ -20,6 +20,7 @@ const schema = new Schema(
     target: String,
     enabled: Boolean,
     activated: Boolean,
+    count: Number,
   },
   { collection: "strategies_type_I_game_data" }
 );

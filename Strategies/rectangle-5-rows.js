@@ -34,10 +34,7 @@ module.exports = function (S, round, bet, betsList) {
   // ------------------------
 
   // -------- Set the nextMove. When all values the same set to "-"
-  if (
-    nextBetArr.every((bet) => bet === "P") ||
-    nextBetArr.every((bet) => bet === "B")
-  ) {
+  if (nextBetArr.every((bet) => bet === nextBetArr[0])) {
     S.nextMove = "-";
   } else {
     S.nextMove = okurrs("P", nextBetArr) > okurrs("B", nextBetArr) ? "P" : "B";
@@ -54,10 +51,7 @@ module.exports = function (S, round, bet, betsList) {
   }
 
   // ------- Set the target bet. If all values the same skip (return).
-  if (
-    targetBetArr.every((bet) => bet === "P") ||
-    targetBetArr.every((bet) => bet === "B")
-  ) {
+  if (targetBetArr.every((bet) => bet === targetBetArr[0])) {
     return;
   }
   let targetBet =
