@@ -10,7 +10,6 @@ module.exports = function (S, Rnd, bet, bets) {
   const TRIGGERED = trigger.every((x) => x === trigger[0]);
 
   if (S.activated) {
-    console.log(S.count);
     const SEQ = bets.slice(Rnd - (S.count > 3 ? S.count - 3 : S.count), Rnd);
     if (SEQ.some((x) => x === S.target)) {
       reset(S);
