@@ -22,6 +22,7 @@ module.exports = function (S, R, bet, betsList) {
       S.nextMove = S.target;
       S.lvl++;
       calcPercent(S);
+      S.nextMove = S.target = betsList[R - 1];
     }
   }
 

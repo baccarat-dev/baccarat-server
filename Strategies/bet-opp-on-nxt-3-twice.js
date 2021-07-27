@@ -1,16 +1,17 @@
 const { calcPercent, reset } = require("./common");
 
-module.exports = function (S, Rnd, bet, bets) {
+module.exports = function (S, R, bet, bets) {
   // idle time for the strategy
-  if (Rnd === 1) {
+  if (R === 1) {
     return;
   }
 
-  const trigger = bets.slice(Rnd - 2, Rnd);
-  const TRIGGERED = trigger.every((x) => x === trigger[0]);
+  const trigger = bets.slice(R - 2, R);
+  const TRIGGERED =
+    trigger.every((x) => x === trigger[0]) && bets[R - 1] !== bets[R - 3];
 
   if (S.activated) {
-    const SEQ = bets.slice(Rnd - (S.count > 3 ? S.count - 3 : S.count), Rnd);
+    const SEQ = bets.slice(R - (S.count > 3 ? S.count - 3 : S.count), R);
     if (SEQ.some((x) => x === S.target)) {
       reset(S);
       S.activated = false;
