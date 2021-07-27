@@ -24,10 +24,6 @@ module.exports = function (S, round, bet, betsList) {
     S.hasWonInCol = false;
   }
 
-  if (!S.reverse) {
-    console.log(bet, S.target, MOD6);
-  }
-
   if (round === 6) {
     setTarget(S, round, betsList);
     return;

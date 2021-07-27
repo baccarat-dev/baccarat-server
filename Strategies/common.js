@@ -1,7 +1,9 @@
 const { roundXToNthDecimal } = require("../helper");
 
 const calcPercent = function (S) {
-  S.maxLvl = S.maxLvl < S.lvl ? S.lvl : S.maxLvl;
+  if (S.maxLvl < S.lvl) {
+    S.lvl = 1;
+  }
   const percent = (S.lvl * 100) / S.maxLvl;
   S.percent = roundXToNthDecimal(percent, 1);
 };
