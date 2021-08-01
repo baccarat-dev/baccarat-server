@@ -1,32 +1,38 @@
 const { calcPercent, reset } = require("./common");
 
 module.exports = function (S, round, bet, betsList) {
-  const NB_ROWS = 5;
-  if (round < 16) {
+  if (round <= S.row * 4) {
     return;
   }
 
   let targetIdx;
   let nextIdx;
 
-  switch (round % NB_ROWS) {
+  switch (round % S.row) {
     case 1:
       S.hasWonInCol = false;
       S.cornerCellIdx = round - 1;
-      S.nextMove = betsList[S.cornerCellIdx - 15];
+      S.nextMove = betsList[S.cornerCellIdx - S.row * 4];
       S.nextMove = S.reverse ? (S.nextMove === "P" ? "B" : "P") : S.nextMove;
       return;
     case 2:
-      targetIdx = S.cornerCellIdx - 15;
-      nextIdx = targetIdx + NB_ROWS;
+      targetIdx = S.cornerCellIdx - S.row * 4;
+      nextIdx = targetIdx + S.row;
       break;
     case 3:
-      targetIdx = S.cornerCellIdx - 10;
-      nextIdx = targetIdx + NB_ROWS;
+      targetIdx = S.cornerCellIdx - S.row * 3;
+      nextIdx = targetIdx + S.row;
       break;
     case 4:
-      targetIdx = S.cornerCellIdx - 5;
-      nextIdx = targetIdx + NB_ROWS;
+      targetIdx = S.cornerCellIdx - S.row * 2;
+      nextIdx = targetIdx + S.row;
+      break;
+    case 5:
+      if (S.row === 5) {
+        break;
+      }
+      targetIdx = S.cornerCellIdx - S.row;
+      nextIdx = targetIdx + S.row;
       break;
     default:
       targetIdx = S.cornerCellIdx;
@@ -61,7 +67,7 @@ module.exports = function (S, round, bet, betsList) {
   } else {
     // strategy lost, we calc % and set nextMove
     S.lvl++;
-    S.nextMove = round % NB_ROWS === 0 ? "-" : nextBet;
+    S.nextMove = round % S.row === 0 ? "-" : nextBet;
     calcPercent(S);
   }
 };

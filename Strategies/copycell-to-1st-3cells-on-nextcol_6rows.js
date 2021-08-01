@@ -1,7 +1,6 @@
 const { calcPercent, reset } = require("./common");
 
 module.exports = function (S, round, bet, betsList) {
-  // idle time for the strategy
   const ACTIVE = round > 3 + S.row;
 
   const MOD6 = (round - 1) % 6;

@@ -29,3 +29,15 @@ module.exports = StrategyTypeIGameData = mongoose.model(
   "strategies_type_I_game_data",
   schema
 );
+
+StrategyTypeIGameData.updateMany(
+  { name: "Mirror-8 (R)" },
+  { name: "Mirror-8 5.rows (R)" },
+  function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Updated Docs : ", docs);
+    }
+  }
+);

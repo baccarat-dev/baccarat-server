@@ -1,7 +1,6 @@
 const { calcPercent, reset, okurrs } = require("./common");
 
 module.exports = function (S, round, bet, betsList) {
-  // idle time for the strategy
   if (round < 6) {
     return;
   }
