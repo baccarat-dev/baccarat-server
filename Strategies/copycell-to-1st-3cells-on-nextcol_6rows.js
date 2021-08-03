@@ -1,7 +1,7 @@
 const { calcPercent, reset } = require("./common");
 
 module.exports = function (S, round, bet, betsList) {
-  const ACTIVE = round > 3 + S.row;
+  const ACTIVE = round > 3 + S.nbRows;
 
   const MOD6 = (round - 1) % 6;
 
@@ -10,7 +10,7 @@ module.exports = function (S, round, bet, betsList) {
   }
 
   const STRATEGY_WON = bet === S.target;
-  if (ACTIVE && !S.hasWonInCol && MOD6 >= S.row - 3 && MOD6 < S.row) {
+  if (ACTIVE && !S.hasWonInCol && MOD6 >= S.nbRows - 3 && MOD6 < S.nbRows) {
     if (STRATEGY_WON) {
       // strategy won, so we reset the strategy details
       S.hasWonInCol = true;
@@ -27,13 +27,13 @@ module.exports = function (S, round, bet, betsList) {
   }
 
   // sets the next target and changes the nextmove to "-" when reaching the target row
-  if (MOD6 === S.row - 1) {
+  if (MOD6 === S.nbRows - 1) {
     S.target = betsList[round - 1];
     S.nextMove = "-";
   }
 
   // sets the next move just before starting the 1st cell
-  if (round > 5 && S.row - 3 === round % 6) {
+  if (round > 5 && S.nbRows - 3 === round % 6) {
     S.nextMove = S.target;
   }
 };

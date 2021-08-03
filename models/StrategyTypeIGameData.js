@@ -16,11 +16,12 @@ const schema = new Schema(
     cornerCellIdx: String,
     rectangle: Boolean,
     history: [Object],
-    row: Number,
     target: String,
     enabled: Boolean,
     activated: Boolean,
     count: Number,
+    targetIdx: Number,
+    nbRows: Number,
   },
   { collection: "strategies_type_I_game_data" }
 );
@@ -30,14 +31,11 @@ module.exports = StrategyTypeIGameData = mongoose.model(
   schema
 );
 
-StrategyTypeIGameData.updateMany(
-  { name: "Mirror-8 (R)" },
-  { name: "Mirror-8 5.rows (R)" },
-  function (err, docs) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Updated Docs : ", docs);
-    }
-  }
-);
+// StrategyTypeIGameData.find({ name: "Mirror-L-10 5x2" })
+//   .exec()
+//   .then((docs) => {
+//     docs.forEach(async (doc) => {
+//       doc.name = "Mirror L 5x2 - 6 rows";
+//       doc.save();
+//     });
+//   });
