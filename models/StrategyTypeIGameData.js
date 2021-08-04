@@ -22,6 +22,7 @@ const schema = new Schema(
     count: Number,
     targetIdx: Number,
     nbRows: Number,
+    row: Number,
   },
   { collection: "strategies_type_I_game_data" }
 );
