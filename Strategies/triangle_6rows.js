@@ -6,7 +6,7 @@ module.exports = function (S, R, bet) {
   const STARTING_CELL = R === 1 + S.row || ((R - 1 - S.row) / 3) % 3 === 0;
 
   if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
-    S.nextMove = S.target = bet === "P" ? "B" : "P";
+    S.nextMove = S.target = S.reverse ? bet : bet === "P" ? "B" : "P";
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
@@ -14,7 +14,11 @@ module.exports = function (S, R, bet) {
   }
 
   const i = S.targetIdx;
-  const QUALIFIED_ROUNDS = [i + 2, i + 3, i + 7, i + 8, i + 13];
+  const QUALIFIED_ROUNDS_REGULAR = [i + 2, i + 3, i + 7, i + 8, i + 13];
+  const QUALIFIED_ROUNDS_REVERSE = [i + 7, i + 8, i + 12, i + 13, i + 14];
+  const QUALIFIED_ROUNDS = S.reverse
+    ? QUALIFIED_ROUNDS_REVERSE
+    : QUALIFIED_ROUNDS_REGULAR;
   const IS_ON_QUALIFIED_ROUND = QUALIFIED_ROUNDS.includes(R);
 
   if (S.activated && !S.hasWonInCol && IS_ON_QUALIFIED_ROUND) {
