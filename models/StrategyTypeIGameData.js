@@ -23,6 +23,8 @@ const schema = new Schema(
     targetIdx: Number,
     nbRows: Number,
     row: Number,
+    pattern: [String],
+    targetBets: [String],
   },
   { collection: "strategies_type_I_game_data" }
 );
