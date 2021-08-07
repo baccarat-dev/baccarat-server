@@ -5,7 +5,11 @@ module.exports = function (S, R, bet) {
 
   const STARTING_CELL = R === 1 + S.row || ((R - 1 - S.row) / 3) % 3 === 0;
 
-  if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
+  if (
+    (MOD === S.row && STARTING_CELL) ||
+    (S.hasWonInCol && MOD === S.row) ||
+    (S.reverse && !S.hasWonInCol && S.row === MOD)
+  ) {
     S.nextMove = S.target = S.reverse ? bet : bet === "P" ? "B" : "P";
     S.activated = true;
     S.targetIdx = R - 1;
