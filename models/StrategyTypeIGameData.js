@@ -15,7 +15,6 @@ const schema = new Schema(
     reverse: Boolean,
     cornerCellIdx: String,
     rectangle: Boolean,
-    history: [Object],
     target: String,
     enabled: Boolean,
     activated: Boolean,
@@ -33,12 +32,3 @@ module.exports = StrategyTypeIGameData = mongoose.model(
   "strategies_type_I_game_data",
   schema
 );
-
-// StrategyTypeIGameData.find({ name: "Mirror-L-10 5x2" })
-//   .exec()
-//   .then((docs) => {
-//     docs.forEach(async (doc) => {
-//       doc.name = "Mirror L 5x2 - 6 rows";
-//       doc.save();
-//     });
-//   });

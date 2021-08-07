@@ -3,8 +3,6 @@ const ShortGame = require("../models/ShortGameTypeI");
 const StrategyTypeIGameData = require("../models/StrategyTypeIGameData");
 const { runStrategies } = require("../Strategies/common");
 
-//StrategyTypeIGameData.insertMany([{}, {}]);
-
 async function getAllBets(_id, res) {
   const data = (
     await ShortGame.findById(_id).populate("strategies")
@@ -114,8 +112,6 @@ async function undoBet(_id, res) {
     promisesQueue.push(promise);
   });
   await Promise.all(promisesQueue); // this holds execution until all strategies finish
-  await game.save();
-
   await game.save();
   if (l2 === l1 - 2) {
     res.json({ status: 200 });
