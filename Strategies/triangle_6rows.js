@@ -15,7 +15,7 @@ module.exports = function (S, R, bet) {
 
   const i = S.targetIdx;
   const QUALIFIED_ROUNDS_REGULAR = [i + 2, i + 3, i + 7, i + 8, i + 13];
-  const QUALIFIED_ROUNDS_REVERSE = [i + 7, i + 8, i + 12, i + 13, i + 14];
+  const QUALIFIED_ROUNDS_REVERSE = [i + 6, i + 7, i + 11, i + 12, i + 13];
   const QUALIFIED_ROUNDS = S.reverse
     ? QUALIFIED_ROUNDS_REVERSE
     : QUALIFIED_ROUNDS_REGULAR;
