@@ -25,7 +25,7 @@ const runStrategies = async function (GAME, bet) {
         // delete copy_S.history;
         // S.history.push(copy_S);
         const runStrategy = require("../Strategies/" + S.code);
-        runStrategy(S, GAME.bets.length + 1, bet, GAME.bets);
+        runStrategy(S, GAME.round, bet, GAME.bets);
         await S.save();
         resolve();
       } else {
