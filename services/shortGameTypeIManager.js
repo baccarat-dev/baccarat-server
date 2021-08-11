@@ -1,43 +1,17 @@
-const { roundXToNthDecimal } = require("../helper");
 const ShortGame = require("../models/ShortGameTypeI");
 const StrategyTypeIGameData = require("../models/StrategyTypeIGameData");
 const { runStrategies } = require("../Strategies/common");
+const {
+  calcQuickStats,
+  calcPersistentMetrics,
+} = require("../services/metrics.js");
 
 async function getAllBets(_id, res) {
-  const data = (
-    await ShortGame.findById(_id).populate("strategies")
-  ).toObject();
-
+  const game = await ShortGame.findById(_id).populate("strategies");
+  const data = game.toObject();
   data.strategies = data.strategies.filter((S) => S.enabled);
-
-  let pct_sum_P = (pct_sum_B = P_next_count = B_next_count = 0);
-  data.strategies.forEach((S) => {
-    if (S.nextMove === "P") {
-      pct_sum_P += S.percent;
-      P_next_count++;
-    } else if (S.nextMove === "B") {
-      pct_sum_B += S.percent;
-      B_next_count++;
-    }
-  });
-  const pct_avg_P = P_next_count
-    ? roundXToNthDecimal(pct_sum_P / P_next_count, 1)
-    : 0;
-  const pct_avg_B = B_next_count
-    ? roundXToNthDecimal(pct_sum_B / B_next_count, 1)
-    : 0;
-  const P_next_pct =
-    Math.round((100 * P_next_count) / (P_next_count + B_next_count)) || 0;
-  const B_next_pct =
-    Math.round((100 * B_next_count) / (P_next_count + B_next_count)) || 0;
-  data.stats = {
-    pct_avg_P,
-    pct_avg_B,
-    P_next_count,
-    B_next_count,
-    P_next_pct,
-    B_next_pct,
-  };
+  calcQuickStats(data, game);
+  await game.save();
   res.contentType("application/json");
   res.send(JSON.stringify({ status: 200, data }, null, 4));
 }
@@ -49,6 +23,7 @@ async function insertBet(body, res) {
     .then(async (GAME) => {
       GAME.bets.push(body.bet);
       await runStrategies(GAME, body.bet);
+      calcPersistentMetrics(GAME);
       GAME.round++;
       await GAME.save();
       res.json({ status: 200 });
@@ -63,6 +38,7 @@ async function resetGame(_id, res) {
   const game = await ShortGame.findById(_id);
   game.round = 1;
   game.bets = [];
+  game.metrics = {};
 
   const promisesQueue = [];
   game.strategies.forEach((S_id) => {
