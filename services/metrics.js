@@ -14,8 +14,6 @@ exports.calcPersistentMetrics = function (game) {
       ? true
       : false;
   pcts.push(avgMetric);
-  console.log(game.metrics.winsBetweenLossess);
-  console.log(pcts);
   const metric = game.metrics.winsBetweenLossess;
   const LOST_4 = pcts
     .slice(pcts.length - 4, pcts.length)
@@ -35,8 +33,6 @@ exports.calcPersistentMetrics = function (game) {
     }
     metric.startingRound = game.round;
     metric.current = 0;
-    console.log("LOST ALL 4 ");
-    console.log(wins_count);
   }
   if (pcts.length >= 4 && !metric.activated && LOST_4) {
     metric.activated = true;
