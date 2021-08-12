@@ -9,7 +9,7 @@ const {
 async function getAllBets(_id, res) {
   const game = await ShortGame.findById(_id).populate("strategies");
   const data = game.toObject();
-  data.strategies = data.strategies.filter((S) => S.enabled);
+  //data.strategies = data.strategies.filter((S) => S.enabled);
   calcQuickStats(data, game);
   await game.save();
   res.contentType("application/json");
