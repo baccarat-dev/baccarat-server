@@ -21,8 +21,21 @@ module.exports = function (S, round, bet, betsList) {
     }
   }
 
+  const STRATEGY_WON = bet === targetBet;
+  if (!S.hasWonInCol) {
+    if (STRATEGY_WON) {
+      // strategy won, so we reset the strategy details
+      S.hasWonInCol = true;
+      S.nextMove = "-";
+      reset(S);
+    } else {
+      // strategy lost, we calc %, go up a lvl and update maxLvl if exceeded
+      S.lvl++;
+      calcPercent(S);
+    }
+  }
+
   if (R_6 && MOD === 0) {
-    // this will keep the next move instead of changing it to "-" on the next block when hasWonInCol==true
     return;
   }
 
@@ -32,22 +45,7 @@ module.exports = function (S, round, bet, betsList) {
     return;
   }
 
-  const STRATEGY_WON = bet === targetBet;
-  if (STRATEGY_WON) {
-    // strategy won, so we reset the strategy details
-    S.hasWonInCol = true;
-    S.nextMove = "-";
-    reset(S);
-  } else {
-    // strategy lost, we calc %, go up a lvl and update maxLvl if exceeded
-    S.lvl++;
-    calcPercent(S);
-  }
-
   if (R_5 && MOD === 0) {
-    // reached the final round in a column, there is no expected next move
     S.nextMove = "-";
   }
-
-  return;
 };
