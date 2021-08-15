@@ -5,8 +5,6 @@ const {
   undoBet,
   resetGame,
   getAllBets,
-  deleteGame,
-  test,
 } = require("../services/shortGameTypeIManager");
 
 router.get("/allrecords/:_id", (req, res) => {

@@ -9,7 +9,6 @@ const {
 async function getAllBets(_id, res) {
   const game = await ShortGame.findById(_id).populate("strategies");
   const data = game.toObject();
-  //data.strategies = data.strategies.filter((S) => S.enabled);
   calcQuickStats(data, game);
   await game.save();
   res.contentType("application/json");
@@ -25,6 +24,7 @@ async function insertBet(body, res) {
       await runStrategies(GAME, body.bet);
       calcPersistentMetrics(GAME);
       GAME.round++;
+      GAME.undos = 1;
       await GAME.save();
       res.json({ status: 200 });
     })
@@ -65,35 +65,28 @@ async function resetGame(_id, res) {
 
 async function undoBet(_id, res) {
   const game = await ShortGame.findById(_id);
-  const l1 = game.bets.length + game.round;
   game.bets.pop();
   game.round--;
-  const l2 = game.bets.length + game.round;
-
   const promisesQueue = [];
   game.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve) => {
       const S = await StrategyTypeIGameData.findById(S_id);
-      if (S.enabled) {
-        const history = S.history;
-        S.overwrite({ ...history[history.length - 1] });
-        history.pop();
-        S.history = history;
-        await S.save();
-        resolve();
-      } else {
-        resolve();
-      }
+      const history = S.history;
+      S.overwrite({ ...history[history.length - 1] });
+      history.pop();
+      S.history = history;
+      await S.save();
+      resolve();
     });
     promisesQueue.push(promise);
   });
   await Promise.all(promisesQueue); // this holds execution until all strategies finish
+  game.metrics.data.rightAndWrongs.pcts.pop();
+  game.metrics.winsBetweenLossess = game.metrics.winsBetweenLossess.history[0];
+  game.metrics.winsPerLvl = game.metrics.winsPerLvl.history[0];
+  game.undos--;
   await game.save();
-  if (l2 === l1 - 2) {
-    res.json({ status: 200 });
-  } else {
-    res.json({ status: 500 });
-  }
+  res.json({ status: 200 });
 }
 
 async function deleteGame(req, res) {}

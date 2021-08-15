@@ -20,17 +20,14 @@ const runStrategies = async function (GAME, bet) {
   GAME.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve, reject) => {
       const S = await StrategyTypeIGameData.findById(S_id);
-      if (S.enabled) {
-        // const copy_S = { ...S.toObject() };
-        // delete copy_S.history;
-        // S.history.push(copy_S);
-        const runStrategy = require("../Strategies/" + S.code);
-        runStrategy(S, GAME.round, bet, GAME.bets);
-        await S.save();
-        resolve();
-      } else {
-        resolve();
-      }
+      const copy_S = { ...S.toObject() };
+      delete copy_S.history;
+      S.history.shift();
+      S.history.push(copy_S);
+      const runStrategy = require("../Strategies/" + S.code);
+      runStrategy(S, GAME.round, bet, GAME.bets);
+      await S.save();
+      resolve();
     });
     promisesQueue.push(promise);
   });

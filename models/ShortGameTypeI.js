@@ -20,8 +20,15 @@ const schema = new Schema(
         max: { type: Number, default: null },
         current: { type: Number, default: 0 },
         activated: { type: Boolean, default: false },
-        startingRound: { type: Number, default: 0 },
+        startIdx: { type: Number, default: 0 },
         endingRound: { type: Number, default: 0 },
+        history: [Object],
+      },
+      winsPerLvl: {
+        lvl: { type: Number, default: 1 },
+        maxLvl: { type: Number, default: 4 },
+        count: [{ lvl: Number, n: { type: Number, default: 0 } }],
+        history: [Object],
       },
       quickStats: {
         pct_avg_P: { type: Number, default: 0 },
@@ -32,6 +39,7 @@ const schema = new Schema(
         B_next_pct: { type: Number, default: 0 },
       },
     },
+    undos: { type: Number, default: 1 },
   },
   { collection: "short_games_type_I" }
 );

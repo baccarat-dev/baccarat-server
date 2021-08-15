@@ -24,6 +24,7 @@ const schema = new Schema(
     row: Number,
     pattern: [String],
     targetBets: [String],
+    history: [Object],
   },
   { collection: "strategies_type_I_game_data" }
 );
