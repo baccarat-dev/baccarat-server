@@ -70,15 +70,17 @@ exports.calcPersistentMetrics = function (game) {
 
 exports.calcQuickStats = function (data, game) {
   let pct_sum_P = (pct_sum_B = P_next_count = B_next_count = 0);
-  data.strategies.forEach((S) => {
-    if (S.nextMove === "P") {
-      pct_sum_P += S.percent;
-      P_next_count++;
-    } else if (S.nextMove === "B") {
-      pct_sum_B += S.percent;
-      B_next_count++;
-    }
-  });
+  data.strategies
+    .filter((x) => x.enabled)
+    .forEach((S) => {
+      if (S.nextMove === "P") {
+        pct_sum_P += S.percent;
+        P_next_count++;
+      } else if (S.nextMove === "B") {
+        pct_sum_B += S.percent;
+        B_next_count++;
+      }
+    });
   const pct_avg_P = P_next_count
     ? roundXToNthDecimal(pct_sum_P / P_next_count, 1)
     : 0;
