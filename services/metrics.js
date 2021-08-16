@@ -1,4 +1,4 @@
-const { roundXToNthDecimal, deepCopy } = require("../helper");
+const { roundXToNthDecimal } = require("../helper");
 
 exports.calcPersistentMetrics = function (game) {
   // create array of wins and losses for the metric
@@ -17,14 +17,14 @@ exports.calcPersistentMetrics = function (game) {
   pcts.push(avgMetric);
   const metric = game.metrics.winsBetweenLossess;
   metric.history.pop();
-  metric.history.push(deepCopy(metric.toObject()));
+  metric.history.push(metric.toObject());
 
   // ------------------------------------------------------
 
   // ------------------------------------------------------
   const winsPerLvl = game.metrics.winsPerLvl;
   winsPerLvl.history.pop();
-  winsPerLvl.history.push(deepCopy(winsPerLvl.toObject()));
+  winsPerLvl.history.push(winsPerLvl.toObject());
   if (avgMetric === false) {
     winsPerLvl.maxLvl === winsPerLvl.lvl
       ? (winsPerLvl.lvl = 1)
