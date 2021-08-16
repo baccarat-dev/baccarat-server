@@ -35,6 +35,9 @@ exports.calcPersistentMetrics = function (game) {
     lvl ? lvl.n++ : winsPerLvl.count.push({ lvl: i, n: 1 });
     winsPerLvl.lvl = 1;
   }
+  console.log(winsPerLvl);
+  winsPerLvl.count.sort((a, b) => a.lvl - b.lvl);
+  console.log(winsPerLvl);
   // ------------------------------------------------------
 
   // remove "null" (skip) values from the array of pcts

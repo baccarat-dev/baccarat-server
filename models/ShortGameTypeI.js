@@ -26,7 +26,7 @@ const schema = new Schema(
       },
       winsPerLvl: {
         lvl: { type: Number, default: 1 },
-        maxLvl: { type: Number, default: 4 },
+        maxLvl: { type: Number, default: 3 },
         count: [{ lvl: Number, n: { type: Number, default: 0 } }],
         history: [Object],
       },
