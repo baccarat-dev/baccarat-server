@@ -16,7 +16,7 @@ async function getAllBets(_id, res) {
 }
 
 async function insertBet(body, res) {
-  ShortGame.findById(body._id)
+  return ShortGame.findById(body._id)
     .populate("strategies")
     .exec()
     .then(async (GAME) => {

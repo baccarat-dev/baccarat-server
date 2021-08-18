@@ -1,6 +1,61 @@
+const { strategies } = require("../Strategies/all");
+const { randArr } = require("./simulator/random");
 const { roundXToNthDecimal } = require("../helper");
 
-exports.calcPersistentMetrics = function (game) {
+let init = {
+  metrics: {
+    data: { rightAndWrongs: { pcts: [] } },
+    winsBetweenLossess: {
+      min: null,
+      max: null,
+      current: 0,
+      activated: false,
+      startIdx: 0,
+      endingRound: 0,
+    },
+    winsPerLvl: { lvl: 1, maxLvl: 4, count: [] },
+    quickStats: {
+      pct_avg_P: 0,
+      pct_avg_B: 0,
+      P_next_count: 0,
+      B_next_count: 0,
+      P_next_pct: 0,
+      B_next_pct: 0,
+    },
+  },
+  round: 1,
+  bets: [],
+  strategies,
+  undos: 1,
+};
+
+let GAME = JSON.parse(JSON.stringify(init));
+
+exports.runSimulation = runSimulation = () => {
+  GAME = JSON.parse(JSON.stringify(init));
+  let time = Date.now();
+  for (let i = 0; i < 10000; i++) {
+    try {
+      simulation(randArr[i] ? "P" : "B");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  GAME.execTime = Date.now() - time;
+  console.log("Finished in ", Date.now() - time, "ms");
+  return GAME;
+};
+
+function runStrategies(GAME, bet) {
+  GAME.strategies.forEach((S) => {
+    if (S.enabled) {
+      const runStrategy = require("../Strategies/" + S.code);
+      runStrategy(S, GAME.round, bet, GAME.bets);
+    }
+  });
+}
+
+function calcMetrics(game) {
   // create array of wins and losses for the metric
   const { P_next_pct, B_next_pct } = game.metrics.quickStats;
   const pcts = game.metrics.data.rightAndWrongs.pcts;
@@ -16,15 +71,11 @@ exports.calcPersistentMetrics = function (game) {
       : false;
   pcts.push(avgMetric);
   const metric = game.metrics.winsBetweenLossess;
-  metric.history.pop();
-  metric.history.push(metric.toObject());
 
   // ------------------------------------------------------
 
   // ------------------------------------------------------
   const winsPerLvl = game.metrics.winsPerLvl;
-  winsPerLvl.history.pop();
-  winsPerLvl.history.push(winsPerLvl.toObject());
   if (avgMetric === false) {
     winsPerLvl.maxLvl === winsPerLvl.lvl
       ? (winsPerLvl.lvl = 1)
@@ -67,11 +118,11 @@ exports.calcPersistentMetrics = function (game) {
     metric.activated = true;
     metric.startIdx = cleanPcts.length;
   }
-};
+}
 
-exports.calcQuickStats = function (data, game) {
+function quickstat(game) {
   let pct_sum_P = (pct_sum_B = P_next_count = B_next_count = 0);
-  data.strategies
+  game.strategies
     .filter((x) => x.enabled)
     .forEach((S) => {
       if (S.nextMove === "P") {
@@ -109,7 +160,7 @@ exports.calcQuickStats = function (data, game) {
     else min_conseq_wins = wins;
   });
 
-  data.stats = game.metrics.quickStats = {
+  game.stats = game.metrics.quickStats = {
     pct_avg_P,
     pct_avg_B,
     P_next_count,
@@ -119,4 +170,12 @@ exports.calcQuickStats = function (data, game) {
     max_conseq_losses,
     max_conseq_wins,
   };
-};
+}
+
+function simulation(BET) {
+  GAME.bets.push(BET);
+  runStrategies(GAME, BET);
+  calcMetrics(GAME);
+  quickstat(GAME);
+  GAME.round++;
+}
