@@ -31,12 +31,19 @@ let init = {
 
 let GAME = JSON.parse(JSON.stringify(init));
 
-exports.runSimulation = runSimulation = (_ids) => {
+exports.runSimulation = runSimulation = (_ids, nbrOfBets, trueRand) => {
+  trueRand = false;
   GAME = JSON.parse(JSON.stringify(init));
   GAME.strategies = GAME.strategies.filter((S) => _ids.includes(S._id));
   let time = Date.now();
-  for (let i = 0; i < 10000; i++) {
-    const BET = randArr[i] ? "P" : "B";
+  for (let i = 0; i < nbrOfBets; i++) {
+    const BET = trueRand
+      ? randArr[i]
+        ? "P"
+        : "B"
+      : Math.round(Math.random())
+      ? "P"
+      : "B";
     GAME.bets.push(BET);
     runStrategies(GAME, BET);
     calcMetrics(GAME);
