@@ -26,9 +26,7 @@ exports.calcPersistentMetrics = function (game) {
   winsPerLvl.history.pop();
   winsPerLvl.history.push(winsPerLvl.toObject());
   if (avgMetric === false) {
-    winsPerLvl.maxLvl === winsPerLvl.lvl
-      ? (winsPerLvl.lvl = 1)
-      : winsPerLvl.lvl++;
+    winsPerLvl.lvl++;
   } else if (avgMetric === true) {
     const i = winsPerLvl.lvl;
     const lvl = winsPerLvl.count.find((x) => x.lvl === i);

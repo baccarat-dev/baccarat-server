@@ -88,33 +88,6 @@ router.get("/strategy/setmaxlvl/:_id/:N", (req, res) => {
   }
 });
 
-router.get("/metric/setmaxlvl/:_id/:N", (req, res) => {
-  const N = req.params.N;
-  const _id = req.params._id;
-  if (isNaN(+N)) {
-    res.json({ status: 500 });
-  } else {
-    ShortGameTypeI.findById(_id)
-      .exec()
-      .then(async (game) => {
-        if (game) {
-          game.metrics.winsPerLvl.maxLvl = N;
-          await game.save();
-          res.json({
-            status: 200,
-            msg: `Max lvl set to ${N} for '${game.name}' `,
-          });
-        } else {
-          res.json({ status: 404, msg: "Nonexistent Strategy ID" });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        res.json({ status: 500, msg: "Operation Failed" });
-      });
-  }
-});
-
 router.get("/strategy/:action/:_id", (req, res) => {
   const action = req.params.action.toLowerCase();
   if (!["enable", "disable"].includes(action)) {
