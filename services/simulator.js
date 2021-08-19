@@ -31,15 +31,17 @@ let init = {
 
 let GAME = JSON.parse(JSON.stringify(init));
 
-exports.runSimulation = runSimulation = () => {
+exports.runSimulation = runSimulation = (_ids) => {
   GAME = JSON.parse(JSON.stringify(init));
+  GAME.strategies = GAME.strategies.filter((S) => _ids.includes(S._id));
   let time = Date.now();
   for (let i = 0; i < 10000; i++) {
-    try {
-      simulation(randArr[i] ? "P" : "B");
-    } catch (error) {
-      console.log(error);
-    }
+    const BET = randArr[i] ? "P" : "B";
+    GAME.bets.push(BET);
+    runStrategies(GAME, BET);
+    calcMetrics(GAME);
+    quickstat(GAME);
+    GAME.round++;
   }
   GAME.execTime = Date.now() - time;
   console.log("Finished in ", Date.now() - time, "ms");
@@ -170,12 +172,4 @@ function quickstat(game) {
     max_conseq_losses,
     max_conseq_wins,
   };
-}
-
-function simulation(BET) {
-  GAME.bets.push(BET);
-  runStrategies(GAME, BET);
-  calcMetrics(GAME);
-  quickstat(GAME);
-  GAME.round++;
 }
