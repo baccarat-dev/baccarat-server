@@ -19,7 +19,7 @@ const runStrategies = async function (GAME, bet) {
 
   GAME.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve, reject) => {
-      const S = await StrategyTypeIGameData.findById(S_id);
+      const S = await StrategyData.findById(S_id);
       if (S.enabled) {
         const copy_S = { ...S.toObject() };
         delete copy_S.history;

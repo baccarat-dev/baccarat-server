@@ -4,15 +4,13 @@ var ObjectId = require("mongodb").ObjectID;
 
 const schema = new Schema(
   {
-    name: { type: String, default: "Short Game" },
+    name: { type: String, required: true },
     round: { type: Number, default: 1 },
     bets: { type: [String], default: [] },
-    userID: { type: String, default: "" },
+    user_id: { type: String, required: true, ref: "users" },
+    active: { type: Boolean, default: false },
     startedOn: { type: Date, default: Date.now() },
-    isTrashed: { type: Boolean, default: false },
-    lastUpdated: { type: Date, default: Date.now() },
-    threshold: { type: Number, default: 3 },
-    strategies: [{ type: ObjectId, ref: "strategies_type_I_game_data" }],
+    strategies: [{ type: ObjectId, ref: "strategies_data" }],
     metrics: {
       data: { rightAndWrongs: { pcts: { type: [Boolean], default: [] } } },
       winsBetweenLossess: {
@@ -37,11 +35,14 @@ const schema = new Schema(
         B_next_count: { type: Number, default: 0 },
         P_next_pct: { type: Number, default: 0 },
         B_next_pct: { type: Number, default: 0 },
+        max_conseq_wins: { type: Number, default: 0 },
+        max_conseq_losses: { type: Number, default: 0 },
       },
     },
     undos: { type: Number, default: 1 },
   },
-  { collection: "short_games_type_I" }
+  { collection: "games" }
 );
+schema.index({ user_id: 1, name: 1 }, { unique: true });
 
-module.exports = ShortGame = mongoose.model("short_games_type_I", schema);
+module.exports = ShortGame = mongoose.model("games", schema);

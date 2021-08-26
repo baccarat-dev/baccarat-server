@@ -1,0 +1,24 @@
+POST http://localhost:4545/game/create
+Content-Type: application/json
+
+{
+    "user_id":"6123ffd917b97f1b13c67a11",
+    "strategies":[
+        {
+        "reverse": false,
+        "code": "mirror-prev-col",
+        "name": "Mirror-8 5.rows",
+        "maxLvl":10
+        },
+        {
+        "reverse": true,
+        "code": "mirror-prev-col",
+        "name": "Mirror-8 5.rows (R)",
+        "maxLvl":5
+        }
+    ]
+}
+
+###
+
+GET http://localhost:4545/game/strategies/all

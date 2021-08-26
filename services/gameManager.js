@@ -1,10 +1,9 @@
-const ShortGame = require("../models/ShortGameTypeI");
-const StrategyTypeIGameData = require("../models/StrategyTypeIGameData");
+const ShortGame = require("../models/Game");
+const StrategyData = require("../models/StrategyData");
+const Strategy = require("../models/Strategy");
 const { runStrategies } = require("../Strategies/common");
-const {
-  calcQuickStats,
-  calcPersistentMetrics,
-} = require("../services/metrics.js");
+const { calcQuickStats, calcPersistentMetrics } = require("./metrics.js");
+const Game = require("../models/Game");
 
 async function getAllBets(_id, res) {
   const game = await ShortGame.findById(_id).populate("strategies");
@@ -43,7 +42,7 @@ async function resetGame(_id, res) {
   const promisesQueue = [];
   game.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve) => {
-      const S = await StrategyTypeIGameData.findById(S_id);
+      const S = await StrategyData.findById(S_id);
       S.lvl = 1;
       S.hasWonInCol = false;
       S.nextMove = "-";
@@ -70,7 +69,7 @@ async function undoBet(_id, res) {
   const promisesQueue = [];
   game.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve) => {
-      const S = await StrategyTypeIGameData.findById(S_id);
+      const S = await StrategyData.findById(S_id);
       if (S.enabled) {
         const history = S.history;
         S.overwrite({ ...history[history.length - 1] });
@@ -91,12 +90,36 @@ async function undoBet(_id, res) {
   res.json({ status: 200 });
 }
 
-async function deleteGame(req, res) {}
+async function getAllGames(user_id, res) {
+  Game.find({ user_id })
+    .populate("strategies")
+    .sort("-startedOn")
+    .then((docs) => {
+      res.json({ status: 200, data: docs });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({ status: 500 });
+    });
+}
+
+async function activateGame(_id, res) {
+  let game = Game.findOne({ activated: true });
+  if (game) {
+    game.activated = false;
+    await game.save();
+  }
+  game = await Game.findById(_id);
+  game.activated = true;
+  await game.save();
+  res.json({ status: 200 });
+}
 
 module.exports = {
   insertBet,
   undoBet,
   resetGame,
-  deleteGame,
   getAllBets,
+  getAllGames,
+  activateGame,
 };

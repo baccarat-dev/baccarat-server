@@ -7,8 +7,8 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log("MongoDB connected!");
+  .then((res) => {
+    console.log(`MongoDB connected to db "${res.connection.db.databaseName}"`);
   })
   .catch((err) => {
     console.log(err);
