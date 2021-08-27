@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 router.post("/users/signup", verifMailPassw, async (req, res) => {
+  return res.status(400).json({ status: 400, msg: "Not allowed" });
   const email = req.body.email;
   const password = req.body.password;
   try {
