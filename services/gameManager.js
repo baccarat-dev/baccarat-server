@@ -70,13 +70,11 @@ async function undoBet(_id, res) {
   game.strategies.forEach((S_id) => {
     const promise = new Promise(async (resolve) => {
       const S = await StrategyData.findById(S_id);
-      if (S.enabled) {
-        const history = S.history;
-        S.overwrite({ ...history[history.length - 1] });
-        history.pop();
-        S.history = history;
-        await S.save();
-      }
+      const history = S.history;
+      S.overwrite({ ...history[history.length - 1] });
+      history.pop();
+      S.history = history;
+      await S.save();
       resolve();
     });
     promisesQueue.push(promise);

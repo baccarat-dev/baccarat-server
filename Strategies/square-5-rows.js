@@ -4,8 +4,15 @@ module.exports = function (S, round, bet, betsList) {
   if (round < 6) {
     return;
   }
-
   const NB_ROWS = 5;
+
+  // if (round % NB_ROWS === 1) {
+  //   S.hasWonInCol = false;
+  // }
+  // if (S.hasWonInCol) {
+  //   S.nextMove = "-";
+  //   return;
+  // }
 
   // -------- Store the values of 3 corners of the square in an array
   const targetBetArr = [],
@@ -45,10 +52,14 @@ module.exports = function (S, round, bet, betsList) {
   targetBet = S.reverse ? (targetBet === "P" ? "B" : "P") : targetBet;
   // ------------------------
 
+  console.log(S.name, S.bet, targetBet, S.hasWonInCol);
+
   const STRATEGY_WON = bet === targetBet;
   if (STRATEGY_WON) {
     // strategy won, so we reset the strategy details
     reset(S);
+    S.hasWonInCol = true;
+    S.nextMove = "-";
   } else {
     // strategy lost, we calc %, go up a lvl and update maxLvl if exceeded
     S.lvl++;

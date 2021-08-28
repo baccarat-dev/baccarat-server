@@ -95,34 +95,6 @@ router.get("/strategy/setmaxlvl/:_id/:N", (req, res) => {
   }
 });
 
-router.get("/strategy/:action/:_id", (req, res) => {
-  const action = req.params.action.toLowerCase();
-  if (!["enable", "disable"].includes(action)) {
-    res.status(200).json({ status: 204, msg: "invalid action" });
-    return;
-  }
-  const _id = req.params._id;
-
-  StrategyData.findById(_id)
-    .exec()
-    .then(async (S) => {
-      if (S) {
-        S.enabled = action === "enable" ? true : false;
-        await S.save();
-        res.status(200).json({
-          status: 200,
-          msg: `${action}d strategy '${S.name}' `,
-        });
-      } else {
-        res.status(40).json({ status: 404, msg: "Nonexistent Strategy" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ status: 500, msg: "Operation Failed" });
-    });
-});
-
 router.post("/create", async (req, res) => {
   const user_id = req.body.user_id;
   let strategies = req.body.strategies;
@@ -187,6 +159,22 @@ router.post("/activate", async (req, res) => {
   const _id = req.body._id;
   if (_id && isValidObjectId(_id) && (await Game.findById(_id))) {
     await activateGame(_id, res);
+  } else {
+    res.status(400).json({ status: 400, msg: "invalid game_id" });
+  }
+});
+
+router.delete("/:_id", async (req, res) => {
+  const _id = req.params._id;
+  if (_id && isValidObjectId(_id) && (await Game.findById(_id))) {
+    Game.deleteOne({ _id })
+      .then((result) => {
+        res.status(200).json({ status: 200, msg: "Game was deleted" });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ status: 500 });
+      });
   } else {
     res.status(400).json({ status: 400, msg: "invalid game_id" });
   }

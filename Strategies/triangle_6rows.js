@@ -10,8 +10,12 @@ module.exports = function (S, R, bet) {
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
+    console.log("Started " + S.name);
     return;
   }
+  console.log(S.name);
+  console.log("-------");
+  console.log(S);
 
   const i = S.targetIdx;
   const QUALIFIED_ROUNDS_REGULAR = [i + 2, i + 3, i + 7, i + 8, i + 13];

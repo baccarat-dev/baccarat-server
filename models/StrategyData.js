@@ -4,7 +4,7 @@ var ObjectId = require("mongodb").ObjectID;
 
 const schema = new Schema(
   {
-    game_id: { type: ObjectId, required: true, ref: "short_games_type_I" },
+    game_id: { type: ObjectId, required: true, ref: "games" },
     code: { type: String, required: true },
     name: { type: String, required: true },
     maxLvl: { type: Number, required: true },
@@ -14,8 +14,7 @@ const schema = new Schema(
     percent: { type: Number, default: 0 },
     nextMove: { type: String, default: "-" },
     hasWonInCol: { type: Boolean, default: false },
-    enabled: { type: Boolean, default: true },
-    activated: { type: Boolean, default: false },
+    activated: { type: Boolean },
     cornerCellIdx: Number,
     target: String,
     count: Number,

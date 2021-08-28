@@ -6,6 +6,14 @@ module.exports = function (S, round, bet, betsList) {
   }
   const NB_ROWS = 5;
 
+  // if (round % NB_ROWS === 1) {
+  //   S.hasWonInCol = false;
+  // }
+  // if (S.hasWonInCol) {
+  //   S.nextMove = "-";
+  //   return;
+  // }
+
   if (round % NB_ROWS === 1) {
     // Entirely skip the first row. No % calc and No nextMove
     S.nextMove = "-";
@@ -42,7 +50,7 @@ module.exports = function (S, round, bet, betsList) {
   // ----------------------
 
   if (round % NB_ROWS === 2) {
-    // 2st row. No % calc and nextMove already set above so just skip
+    // 2nd row. No % calc and nextMove already set above so just skip
     return;
   } else if (round % NB_ROWS === 0) {
     // end row. % is calculated but no next move
@@ -62,6 +70,8 @@ module.exports = function (S, round, bet, betsList) {
   if (STRATEGY_WON) {
     // strategy won, so we reset the strategy details
     reset(S);
+    S.hasWonInCol = true;
+    S.nextMove = "-";
   } else {
     // strategy lost, we calc %, go up a lvl and update maxLvl if exceeded
     S.lvl++;
