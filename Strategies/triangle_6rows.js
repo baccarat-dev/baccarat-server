@@ -7,6 +7,7 @@ module.exports = function (S, R, bet) {
 
   if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
     S.target = S.reverse ? bet : bet === "P" ? "B" : "P";
+    S.nextMove = S.reverse ? "-" : bet;
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
