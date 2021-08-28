@@ -10,7 +10,6 @@ module.exports = function (S, R, bet) {
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
-    S.nextMove = "-";
     return;
   }
 
@@ -32,7 +31,6 @@ module.exports = function (S, R, bet) {
   ];
   const NEXTBET_ROUNDS_REGULAR = QUALIFIED_ROUNDS_REGULAR.map((x) => x - 1);
   const NEXTBET_ROUNDS_REVERSE = QUALIFIED_ROUNDS_REVERSE.map((x) => x - 1);
-  NEXTBET_ROUNDS_REVERSE.shift();
 
   const QUALIFIED_ROUNDS = S.reverse
     ? QUALIFIED_ROUNDS_REVERSE
@@ -53,8 +51,6 @@ module.exports = function (S, R, bet) {
     }
   }
 
-  console.log(S.name, NEXTBET_ROUNDS_REVERSE);
-
   if (!S.reverse) {
     if (NEXTBET_ROUNDS_REGULAR.includes(R)) {
       S.nextMove = S.target;
@@ -69,7 +65,7 @@ module.exports = function (S, R, bet) {
     }
   }
 
-  if (S.hasWonInCol || R === idx + 1) {
+  if (S.hasWonInCol) {
     S.nextMove = "-";
   }
 };
