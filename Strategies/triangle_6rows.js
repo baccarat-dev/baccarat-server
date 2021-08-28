@@ -13,13 +13,26 @@ module.exports = function (S, R, bet) {
     console.log("Started " + S.name);
     return;
   }
-  console.log(S.name);
-  console.log("-------");
-  console.log(S);
 
-  const i = S.targetIdx;
-  const QUALIFIED_ROUNDS_REGULAR = [i + 2, i + 3, i + 7, i + 8, i + 13];
-  const QUALIFIED_ROUNDS_REVERSE = [i + 6, i + 7, i + 11, i + 12, i + 13];
+  const idx = S.targetIdx;
+
+  const QUALIFIED_ROUNDS_REGULAR = [
+    idx + 2,
+    idx + 3,
+    idx + 7,
+    idx + 8,
+    idx + 13,
+  ];
+  const QUALIFIED_ROUNDS_REVERSE = [
+    idx + 6,
+    idx + 7,
+    idx + 11,
+    idx + 12,
+    idx + 13,
+  ];
+  const NEXTBET_ROUNDS_REGULAR = QUALIFIED_ROUNDS_REGULAR.map((x) => x - 1);
+  const NEXTBET_ROUNDS_REVERSE = QUALIFIED_ROUNDS_REVERSE.map((x) => x - 1);
+
   const QUALIFIED_ROUNDS = S.reverse
     ? QUALIFIED_ROUNDS_REVERSE
     : QUALIFIED_ROUNDS_REGULAR;
@@ -39,7 +52,21 @@ module.exports = function (S, R, bet) {
     }
   }
 
-  if (S.hasWonInCol || R >= i + 13) {
+  if (!S.reverse) {
+    if (NEXTBET_ROUNDS_REGULAR.includes(R)) {
+      S.nextMove = S.target;
+    } else {
+      S.nextMove = "-";
+    }
+  } else if (S.reverse) {
+    if (NEXTBET_ROUNDS_REVERSE.includes(R)) {
+      S.nextMove = S.target;
+    } else {
+      S.nextMove = "-";
+    }
+  }
+
+  if (S.hasWonInCol) {
     S.nextMove = "-";
   }
 };
