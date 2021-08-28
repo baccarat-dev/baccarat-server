@@ -10,6 +10,7 @@ module.exports = function (S, R, bet) {
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
+    S.nextMove = "-";
     return;
   }
 
@@ -68,7 +69,7 @@ module.exports = function (S, R, bet) {
     }
   }
 
-  if (S.hasWonInCol) {
+  if (S.hasWonInCol || R === idx + 1) {
     S.nextMove = "-";
   }
 };
