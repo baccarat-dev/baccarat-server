@@ -8,7 +8,7 @@ module.exports = function (S, R, bet) {
   if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
     const antiBet = bet === "P" ? "B" : "P";
     S.target = S.reverse ? bet : antiBet;
-    S.nextMove = S.reverse ? "-" : antiBet;
+    S.nextMove = S.reverse ? "-" : S.target;
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
