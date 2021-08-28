@@ -32,6 +32,7 @@ module.exports = function (S, R, bet) {
   ];
   const NEXTBET_ROUNDS_REGULAR = QUALIFIED_ROUNDS_REGULAR.map((x) => x - 1);
   const NEXTBET_ROUNDS_REVERSE = QUALIFIED_ROUNDS_REVERSE.map((x) => x - 1);
+  NEXTBET_ROUNDS_REVERSE.shift();
 
   const QUALIFIED_ROUNDS = S.reverse
     ? QUALIFIED_ROUNDS_REVERSE
