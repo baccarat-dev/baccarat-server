@@ -1,31 +1,41 @@
-const ShortGame = require("../models/Game");
+const Game = require("../models/Game");
 const StrategyData = require("../models/StrategyData");
-const Strategy = require("../models/Strategy");
 const { runStrategies } = require("../Strategies/common");
 const { calcQuickStats, calcPersistentMetrics } = require("./metrics.js");
-const Game = require("../models/Game");
 
 async function getAllBets(_id, res) {
-  const game = await ShortGame.findById(_id).populate("strategies");
-  const data = game.toObject();
-  calcQuickStats(data, game);
-  await game.save();
-  res.contentType("application/json");
-  res.send(JSON.stringify({ status: 200, data }, null, 4));
+  Game.findById(_id)
+    .populate("strategies")
+    .then(async (game) => {
+      calcQuickStats(game.toObject(), game);
+      await game.save();
+      const data = await Game.findById(_id).populate("strategies").lean();
+      res.contentType("application/json");
+      res.status(200).send(JSON.stringify({ status: 200, data }, null, 4));
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ status: 500, msg: "internal server error" });
+    });
 }
 
 async function insertBet(body, res) {
-  return ShortGame.findById(body._id)
+  return Game.findById(body._id)
     .populate("strategies")
     .exec()
     .then(async (GAME) => {
       GAME.bets.push(body.bet);
       await runStrategies(GAME, body.bet);
+      calcQuickStats(GAME.toObject(), GAME);
       calcPersistentMetrics(GAME);
       GAME.round++;
       GAME.undos = 1;
       await GAME.save();
-      res.json({ status: 200 });
+      let game = await Game.findById(body._id).populate("strategies");
+      calcQuickStats(game.toObject(), game);
+      await game.save();
+      const data = await Game.findById(body._id).populate("strategies").lean();
+      res.json({ status: 200, data });
     })
     .catch((err) => {
       console.log(err);
@@ -34,7 +44,7 @@ async function insertBet(body, res) {
 }
 
 async function resetGame(_id, res) {
-  const game = await ShortGame.findById(_id);
+  const game = await Game.findById(_id);
   game.round = 1;
   game.bets = [];
   game.metrics = {};
@@ -63,7 +73,7 @@ async function resetGame(_id, res) {
 }
 
 async function undoBet(_id, res) {
-  const game = await ShortGame.findById(_id);
+  const game = await Game.findById(_id);
   game.bets.pop();
   game.round--;
   const promisesQueue = [];
@@ -116,7 +126,6 @@ async function activateGame(_id, res) {
 module.exports = {
   insertBet,
   undoBet,
-  resetGame,
   getAllBets,
   getAllGames,
   activateGame,

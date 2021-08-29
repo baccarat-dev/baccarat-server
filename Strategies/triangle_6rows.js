@@ -8,10 +8,11 @@ module.exports = function (S, R, bet) {
   if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
     const antiBet = bet === "P" ? "B" : "P";
     S.target = S.reverse ? bet : antiBet;
-    S.nextMove = S.reverse ? "-" : S.target;
+    S.nextMove = S.reverse ? "-" : antiBet;
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
+    delete S.history;
     return;
   }
 
@@ -31,6 +32,7 @@ module.exports = function (S, R, bet) {
     idx + 12,
     idx + 13,
   ];
+
   const NEXTBET_ROUNDS_REGULAR = QUALIFIED_ROUNDS_REGULAR.map((x) => x - 1);
   const NEXTBET_ROUNDS_REVERSE = QUALIFIED_ROUNDS_REVERSE.map((x) => x - 1);
 
@@ -42,10 +44,10 @@ module.exports = function (S, R, bet) {
   if (S.activated && !S.hasWonInCol && IS_ON_QUALIFIED_ROUND) {
     const STRATEGY_WON = bet === S.target;
     if (STRATEGY_WON) {
+      reset(S);
       S.hasWonInCol = true;
       S.nextMove = "-";
       S.activated = false;
-      reset(S);
       return;
     } else {
       S.lvl++;
