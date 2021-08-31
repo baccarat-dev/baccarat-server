@@ -19,7 +19,7 @@ const schema = new Schema(
     target: String,
     count: Number,
     targetIdx: Number,
-    rnd: Number,
+    rnd: { type: Number, default: 0 },
     nbRows: Number,
     row: Number,
     pattern: { type: [String], required: false, default: undefined },
