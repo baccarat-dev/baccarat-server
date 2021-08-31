@@ -19,6 +19,7 @@ const schema = new Schema(
     target: String,
     count: Number,
     targetIdx: Number,
+    rnd: Number,
     nbRows: Number,
     row: Number,
     pattern: { type: [String], required: false, default: undefined },

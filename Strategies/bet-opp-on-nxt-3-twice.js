@@ -18,6 +18,7 @@ module.exports = function (S, R, bet, bets) {
       S.activated = false;
       S.count = 1;
       S.nextMove = "-";
+      S.rnd = R;
       return;
     }
     S.lvl++;
@@ -34,7 +35,7 @@ module.exports = function (S, R, bet, bets) {
     return;
   }
 
-  if (TRIGGERED) {
+  if (TRIGGERED && R > S.rnd + 3) {
     S.activated = true;
     S.nextMove = S.target = bet === "P" ? "B" : "P";
     S.count = 1;
