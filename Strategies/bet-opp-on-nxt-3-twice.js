@@ -1,13 +1,15 @@
 const { calcPercent, reset } = require("./common");
 
 module.exports = function (S, R, bet, bets) {
-  if (R === 1) {
+  if (R < 4) {
     return;
   }
+  console.log("test");
 
   const trigger = bets.slice(R - 2, R);
+  console.log(trigger);
   const TRIGGERED =
-    trigger.every((x) => x === trigger[0]) && bets[R - 1] !== bets[R - 3];
+    trigger.every((x) => x === trigger[0]) && bets[R - 4] !== bets[R - 3];
 
   if (S.activated) {
     const SEQ = bets.slice(R - (S.count > 3 ? S.count - 3 : S.count), R);
