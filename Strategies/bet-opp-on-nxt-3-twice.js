@@ -4,12 +4,12 @@ module.exports = function (S, R, bet, bets) {
   if (R < 3) {
     return;
   }
-  console.log("test");
 
   const trigger = bets.slice(R - 2, R);
   const TRIGGERED =
     trigger.every((x) => x === trigger[0]) &&
-    (bets[R - 4] !== bets[R - 3] || bets[R - 2] !== bets[R - 3]);
+    ((R > S.rnd + 3 && bets[R - 2] !== bets[R - 3]) ||
+      bets[R - 4] !== bets[R - 3]);
 
   if (S.activated) {
     const SEQ = bets.slice(R - (S.count > 3 ? S.count - 3 : S.count), R);
@@ -35,7 +35,7 @@ module.exports = function (S, R, bet, bets) {
     return;
   }
 
-  if (TRIGGERED && R > S.rnd + 3) {
+  if (TRIGGERED) {
     S.activated = true;
     S.nextMove = S.target = bet === "P" ? "B" : "P";
     S.count = 1;
