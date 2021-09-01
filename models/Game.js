@@ -9,7 +9,7 @@ const schema = new Schema(
     bets: { type: [String], default: [] },
     user_id: { type: String, required: true, ref: "users" },
     active: { type: Boolean, default: false },
-    startedOn: { type: Date, default: Date.now() },
+    startedOn: { type: Date, default: new Date() },
     strategies: [{ type: ObjectId, ref: "strategies_data" }],
     metrics: {
       data: { rightAndWrongs: { pcts: { type: [Boolean], default: [] } } },

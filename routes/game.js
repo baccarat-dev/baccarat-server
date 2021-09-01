@@ -56,7 +56,7 @@ router.post("/create", async (req, res) => {
   strategies.forEach((s) => delete s._id);
   // TODO: MUST ADD .session(dbsession) on every mongoose query
   try {
-    let game = new Game({ user_id });
+    let game = new Game({ user_id, startedOn: new Date() });
     strategies.forEach((s) => (s.game_id = game._id));
     strategies = await StrategyData.insertMany(strategies);
     strategies.forEach((s) => game.strategies.push(s));
