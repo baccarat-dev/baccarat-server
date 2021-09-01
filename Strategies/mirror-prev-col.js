@@ -13,8 +13,6 @@ module.exports = function (S, round, bet, betsList) {
   S.nextMove = betsList[round - S.nbRows];
   S.nextMove = S.reverse ? (S.nextMove === "P" ? "B" : "P") : S.nextMove;
 
-  console.log(S);
-
   if (MOD === 1) {
     // started a new column so reset S.hasWonInCol to false and skip
     S.hasWonInCol = false;

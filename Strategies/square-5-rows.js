@@ -52,8 +52,6 @@ module.exports = function (S, round, bet, betsList) {
   targetBet = S.reverse ? (targetBet === "P" ? "B" : "P") : targetBet;
   // ------------------------
 
-  console.log(S.name, S.bet, targetBet, S.hasWonInCol);
-
   const STRATEGY_WON = bet === targetBet;
   if (STRATEGY_WON) {
     // strategy won, so we reset the strategy details

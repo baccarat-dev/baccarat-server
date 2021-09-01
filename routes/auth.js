@@ -19,7 +19,6 @@ router.post("/users/signup", verifMailPassw, async (req, res) => {
       role: "admin",
     };
     const dbRes = await User.insertMany([user]);
-    console.log(dbRes);
     res
       .status(201)
       .json({ status: 201, msg: "Welcome " + email.toUpperCase() });
@@ -32,7 +31,6 @@ router.post("/users/signup", verifMailPassw, async (req, res) => {
 router.post("/users/login", verifMailPassw, async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(email, password);
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -62,7 +60,6 @@ function generateAccessToken(user) {
 function verifMailPassw(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(req.body);
 
   if (!email || !password) {
     return res.status(400).json({ status: 400, msg: "missing data" });
