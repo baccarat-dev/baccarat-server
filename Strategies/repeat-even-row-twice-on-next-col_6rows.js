@@ -34,6 +34,9 @@ module.exports = function (S, round, bet, betsList) {
     S.hasWonInCol = true;
     S.nextMove = "-";
     reset(S);
+    if (MOD6 === 5) {
+      setTarget(S, round, betsList);
+    }
     return;
   } else {
     // strategy lost, we go up a lvl, calc %, and update maxLvl if exceeded
