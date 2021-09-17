@@ -3,19 +3,19 @@ const { calcPercent, reset } = require("./common");
 module.exports = function (S, R, bet) {
   const MOD = (R - 1) % 6;
 
-  const STARTING_CELL = R === 1 + S.row || ((R - 1 - S.row) / 3) % 3 === 0;
+  if (MOD === 0) {
+    S.hasWonInCol = false;
+  }
 
-  if (
-    !S.skip &&
-    ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row))
-  ) {
+  const STARTING_CELL = R === 1 + S.row || (R - 1 - S.row) % 6 === 0;
+
+  if (!S.activated && !S.hasWonInCol && MOD === S.row && STARTING_CELL) {
     const antiBet = bet === "P" ? "B" : "P";
     S.target = S.reverse ? bet : antiBet;
     S.nextMove = S.reverse ? "-" : antiBet;
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
-    S.skip = true;
     delete S.history;
     return;
   }
@@ -52,7 +52,6 @@ module.exports = function (S, R, bet) {
       S.hasWonInCol = true;
       S.nextMove = "-";
       S.activated = false;
-      S.skip = true;
       return;
     } else {
       S.lvl++;
@@ -60,25 +59,26 @@ module.exports = function (S, R, bet) {
     }
   }
 
-  if (!S.reverse) {
-    if (NEXTBET_ROUNDS_REGULAR.includes(R)) {
-      S.nextMove = S.target;
-    } else {
-      S.nextMove = "-";
-    }
-  } else if (S.reverse) {
-    if (NEXTBET_ROUNDS_REVERSE.includes(R)) {
-      S.nextMove = S.target;
-    } else {
-      S.nextMove = "-";
+  if (S.activated) {
+    if (!S.reverse) {
+      if (NEXTBET_ROUNDS_REGULAR.includes(R)) {
+        S.nextMove = S.target;
+      } else {
+        S.nextMove = "-";
+      }
+    } else if (S.reverse) {
+      if (NEXTBET_ROUNDS_REVERSE.includes(R)) {
+        S.nextMove = S.target;
+      } else {
+        S.nextMove = "-";
+      }
     }
   }
 
   if (S.hasWonInCol) {
     S.nextMove = "-";
   }
-
-  if (MOD === 5) {
-    S.skip = false;
+  if (QUALIFIED_ROUNDS_REGULAR[4] === R || R === QUALIFIED_ROUNDS_REVERSE[4]) {
+    S.activated = false;
   }
 };
