@@ -5,13 +5,17 @@ module.exports = function (S, R, bet) {
 
   const STARTING_CELL = R === 1 + S.row || ((R - 1 - S.row) / 3) % 3 === 0;
 
-  if ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row)) {
+  if (
+    !S.skip &&
+    ((MOD === S.row && STARTING_CELL) || (S.hasWonInCol && MOD === S.row))
+  ) {
     const antiBet = bet === "P" ? "B" : "P";
     S.target = S.reverse ? bet : antiBet;
     S.nextMove = S.reverse ? "-" : antiBet;
     S.activated = true;
     S.targetIdx = R - 1;
     S.hasWonInCol = false;
+    S.skip = true;
     delete S.history;
     return;
   }
@@ -48,6 +52,7 @@ module.exports = function (S, R, bet) {
       S.hasWonInCol = true;
       S.nextMove = "-";
       S.activated = false;
+      S.skip = true;
       return;
     } else {
       S.lvl++;
@@ -71,5 +76,9 @@ module.exports = function (S, R, bet) {
 
   if (S.hasWonInCol) {
     S.nextMove = "-";
+  }
+
+  if (MOD === 5) {
+    S.skip = false;
   }
 };
