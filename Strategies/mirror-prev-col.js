@@ -4,15 +4,19 @@ module.exports = function (S, round, bet, betsList) {
   if (round < 6) {
     return;
   }
+
+  const MOD = round % S.nbRows;
   const R_5 = S.nbRows === 5;
   const R_6 = S.nbRows === 6;
-  const MOD = round % S.nbRows;
 
   let targetBet = betsList[round - S.nbRows - 1];
   targetBet = S.reverse ? (targetBet === "P" ? "B" : "P") : targetBet;
   S.nextMove = betsList[round - S.nbRows];
   S.nextMove = S.reverse ? (S.nextMove === "P" ? "B" : "P") : S.nextMove;
 
+  if (round === 6 && R_6) {
+    return;
+  }
   if (MOD === 1) {
     // started a new column so reset S.hasWonInCol to false and skip
     S.hasWonInCol = false;

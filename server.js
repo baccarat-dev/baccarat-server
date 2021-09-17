@@ -32,6 +32,6 @@ app.use(function (err, req, res, next) {
   res.sendStatus(err.status || 500);
 });
 
-const httpServer = app.listen(PORT || 4545, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`LISTENING ON ${PORT}`);
 });
