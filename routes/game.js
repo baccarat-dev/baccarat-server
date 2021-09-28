@@ -34,6 +34,8 @@ router.delete("/undo/:_id", (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
+  return res.status(500).json({ status: 500, msg: "Forbidden 401" });
+
   const user_id = req.body.user_id;
   let strategies = req.body.strategies;
   const name = req.body.name;
