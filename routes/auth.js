@@ -31,6 +31,13 @@ router.post("/users/signup", verifMailPassw, async (req, res) => {
 router.post("/users/login", verifMailPassw, async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+      const accessToken = generateAccessToken({ email: user.email });
+    return  res.status(200).json({
+        status: 200,
+        msg: "login successful",
+        accessToken,
+        user: user.toObject(),
+      });
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -60,7 +67,8 @@ function generateAccessToken(user) {
 function verifMailPassw(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
-
+  console.log(req.body);
+  return next();
   if (!email || !password) {
     return res.status(400).json({ status: 400, msg: "missing data" });
   }
