@@ -31,7 +31,9 @@ router.post("/users/signup", verifMailPassw, async (req, res) => {
 router.post("/users/login", verifMailPassw, async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-      const accessToken = generateAccessToken({ email: user.email });
+      const user = await User.findOne({ email });
+
+      const accessToken = generateAccessToken({ email: email });
     return  res.status(200).json({
         status: 200,
         msg: "login successful",
